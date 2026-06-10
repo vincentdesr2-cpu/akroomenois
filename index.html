@@ -6,22 +6,22 @@
 
 <style>
 body {
-font-family: Arial, sans-serif;
-padding: 20px;
+  font-family: Arial, sans-serif;
+  padding: 20px;
 }
 
 #text {
-font-size: 24px;
-line-height: 1.6;
+  font-size: 24px;
+  line-height: 1.6;
 }
 
 span {
-padding: 3px;
-cursor: pointer;
+  padding: 3px;
+  cursor: pointer;
 }
 
 .active {
-background-color: yellow;
+  background-color: yellow;
 }
 </style>
 </head>
@@ -31,12 +31,36 @@ background-color: yellow;
 <h1>📖 Greek Reader (Test)</h1>
 
 <p id="text">
-<span data-start="0.0">Αριστοτέλης</span>
-<span data-start="0.5">ἦν</span>
-<span data-start="1.0">φιλόσοφος</span>
-<span data-start="1.5">μέγας</span>
+  <span data-start="0.0">Αριστοτέλης</span>
+  <span data-start="0.5">ἦν</span>
+  <span data-start="1.0">φιλόσοφος</span>
+  <span data-start="1.5">μέγας</span>
 </p>
 
 <audio id="audio" controls>
-<source src="audio/aristotle_test.mp3" type="audio/mpeg">
-Your browser does not support the
+  audio/aristotle_test.mp3
+</audio>
+
+<script>
+const audio = document.getElementById("audio");
+const words = document.querySelectorAll("#text span");
+
+audio.addEventListener("timeupdate", () => {
+  const time = audio.currentTime;
+
+  words.forEach(word => {
+    const start = parseFloat(word.dataset.start);
+
+    // remove highlight by default
+    word.classList.remove("active");
+
+    // highlight if in time window (~0.5 sec)
+    if (time >= start && time < start + 0.5) {
+      word.classList.add("active");
+    }
+  });
+});
+</script>
+
+</body>
+</html>

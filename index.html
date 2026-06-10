@@ -1,18 +1,42 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>Greek Reader</title>
+<meta charset="UTF-8">
+<title>Greek Reader</title>
+
+<style>
+body {
+font-family: Arial, sans-serif;
+padding: 20px;
+}
+
+#text {
+font-size: 24px;
+line-height: 1.6;
+}
+
+span {
+padding: 3px;
+cursor: pointer;
+}
+
+.active {
+background-color: yellow;
+}
+</style>
 </head>
+
 <body>
 
-<h1>📖 Greek Reader</h1>
+<h1>📖 Greek Reader (Test)</h1>
 
-<p>Αριστοτέλης δοκιμή.</p>
+<p id="text">
+<span data-start="0.0">Αριστοτέλης</span>
+<span data-start="0.5">ἦν</span>
+<span data-start="1.0">φιλόσοφος</span>
+<span data-start="1.5">μέγας</span>
+</p>
 
-<audio controls>
-    <source src="audio/aristotle_test.mp3" type="audio/mpeg">
-</audio>
-
-</body>
-</html>
+<audio id="audio" controls>
+<source src="audio/aristotle_test.mp3" type="audio/mpeg">
+Your browser does not support the

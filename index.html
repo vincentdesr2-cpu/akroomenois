@@ -65,15 +65,17 @@ const words = document.querySelectorAll("#text span");
 audio.addEventListener("timeupdate", () => {
   const time = audio.currentTime;
 
-  words.forEach(word => {
+  words.forEach((word, index) => {
     const start = parseFloat(word.dataset.start);
+    const nextStart = index < words.length - 1 
+      ? parseFloat(words[index + 1].dataset.start) 
+      : Infinity;
 
-    // remove highlight by default
-    word.classList.remove("active");
-
-    // highlight if in time window (~0.5 sec)
-    if (time >= start && time < start + 0.5) {
+    // highlight if current time is between this word's start and next word's start
+    if (time >= start && time < nextStart) {
       word.classList.add("active");
+    } else {
+      word.classList.remove("active");
     }
   });
 });

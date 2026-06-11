@@ -71,12 +71,19 @@ audio.addEventListener("timeupdate", () => {
       ? parseFloat(words[index + 1].dataset.start) 
       : Infinity;
 
-    // highlight if current time is between this word's start and next word's start
     if (time >= start && time < nextStart) {
       word.classList.add("active");
     } else {
       word.classList.remove("active");
     }
+  });
+});
+
+// Add click handler to jump to word start time
+words.forEach((word) => {
+  word.addEventListener("click", () => {
+    const startTime = parseFloat(word.dataset.start);
+    audio.currentTime = startTime;
   });
 });
 </script>

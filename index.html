@@ -3,58 +3,32 @@
 <head>
 <meta charset="UTF-8">
 <title>Greek Reader</title>
-  
-<style>
 
-@font-face {
-  font-family: "SBL";
-  src: url("font/SBL_BLit.ttf") format("truetype");
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-  
+<style>
 body {
-  font-family: SBL;
-  padding: 0px;
+  font-family: Arial, sans-serif;
+  padding: 20px;
 }
 
 #text {
   font-size: 24px;
   line-height: 1.6;
 }
-  
-span.word {
-  padding: 0px;
+
+span {
+  padding: 3px;
   cursor: pointer;
-  border-radius: 0px;
-  transition: background-color 0.3s;
-}
-  
-span.punctuation {
-  padding: 0px;
-  cursor: pointer;
-  border-radius: 0px;
-  transition: background-color 0.3s;
 }
 
-span.word:hover {
-  background-color: lightblue;
-}
-
-span.active {
+.active {
   background-color: yellow;
-}
-
-span.wrap {
-  overflow-wrap: anywhere;
 }
 </style>
 </head>
 
 <body>
 
-<h1>📖 Greek Reader (Test A.3)</h1>
+<h1>📖 Greek Reader (Test 6)</h1>
 
 <!--input-->
 
@@ -65,19 +39,19 @@ time_stamp =
 <!--actual code-->
   
 <p id="text">
-  <span data-start="2.2" class="wrap"><span class="word wrap">Εἰσὶ</span> <span class="word wrap">δὲ</span> <span class="word wrap">τῶν</span> <span class="word wrap">μύθων</span> <span class="word wrap">οἱ</span> <span class="word wrap">μὲν</span> <span class="word wrap">ἁπλοῖ</span> <span class="word wrap">οἱ</span> <span class="word wrap">δὲ</span> <span class="word wrap">πεπλεγμένοι</span><span class="punctuation wrap">·</span></span>
-  <span data-start="7.15" class="wrap"><span class="word wrap">καὶ</span> <span class="word wrap">γὰρ</span> <span class="word wrap">αἱ</span> <span class="word wrap">πράξεις</span><span class="punctuation wrap">,</span></span>
-  <span data-start="8.8" class="wrap"><span class="word wrap">ὧν</span> <span class="word wrap">μιμήσεις</span> <span class="word wrap">οἱ</span> <span class="word wrap">μῦθοί</span> <span class="word wrap">εἰσιν</span><span class="punctuation wrap">,</span></span>
-  <span data-start="11.67" class="wrap"><span class="word wrap">ὑπάρχουσιν</span> <span class="word">εὐθὺς</span> <span class="word">οὖσαι</span> <span class="word">τοιαῦται</span><span class="punctuation">.</span></span>
-  <span data-start="15.71" class="wrap"><span class="word">Λέγω</span> <span class="word">δὲ</span> <span class="word">ἁπλῆν</span> <span class="word">μὲν</span> <span class="word">πρᾶξιν</span><span class="punctuation">,</span></span>
-  <span data-start="18.66"><span class="word">ἧς</span> <span class="word">γινομένης</span><span class="punctuation">,</span></span>
-  <span data-start="20.11"><span class="word">ὥσπερ</span> <span class="word">ὥρισται</span><span class="punctuation">,</span></span>
-  <span data-start="21.46"><span class="word">συνεχοῦς</span> <span class="word">καὶ</span> <span class="word">μιᾶς</span> <span class="word">ἄνευ</span> <span class="word">περιπετείας</span> <span class="word">ἢ</span> <span class="word">ἀναγνωρισμοῦ</span> <span class="word">ἡ</span> <span class="word">μετάβασις</span> <span class="word">γίνεται</span><span class="punctuation wrap">,</span></span>
-  <span data-start="28.86"><span class="word">πεπλεγμένην</span> <span class="word">δέ</span><span class="punctuation">,</span></span>
-  <span data-start="30.14"><span class="word">ἐξ</span> <span class="word">ἧς</span> <span class="word">μετ᾿</span> <span class="word">ἀναγνωρισμοῦ</span> <span class="word">ἢ</span> <span class="word">περιπετείας</span> <span class="word">ἢ</span> <span class="word">ἀμφοῖν</span> <span class="word">ἡ</span> <span class="word">μετάβασίς</span> <span class="word">ἐστιν</span><span class="punctuation wrap">.</span></span>
-  <span data-start="37.63"><span class="word">Ταῦτα</span> <span class="word">δὲ</span> <span class="word">δεῖ</span> <span class="word">γίνεσθαι</span> <span class="word">ἐξ</span> <span class="word">αὐτῆς</span> <span class="word">τῆς</span> <span class="word">συστάσεως</span> <span class="word">τοῦ</span> <span class="word">μύθου</span><span class="punctuation wrap">,</span></span>
-  <span data-start="42.75"><span class="word">ὥστε</span> <span class="word">ἐκ</span> <span class="word">τῶν</span> <span class="word">προγεγενημένων</span> <span class="word">συμβαίνειν</span> <span class="word">ἢ</span> <span class="word">ἐξ</span> <span class="word">ἀνάγκης</span> <span class="word">ἢ</span> <span class="word">κατὰ</span> <span class="word">τὸ</span> <span class="word">εἰκὸς</span> <span class="word">γίνεσθαι</span> <span class="word">ταῦτα</span><span class="punctuation wrap">·</span></span>
-  <span data-start="51.05"><span class="word">διαφέρει</span> <span class="word">γὰρ</span> <span class="word">πολὺ</span> <span class="word">τὸ</span> <span class="word">γίνεσθαι</span> <span class="word">τάδε</span> <span class="word">διὰ</span> <span class="word">τάδε</span> <span class="word">ἢ</span> <span class="word">μετὰ</span> <span class="word">τάδε</span><span class="punctuation wrap">.</span></span>
+  <span data-start="2.2">Εἰσὶ δὲ τῶν μύθων οἱ μὲν ἁπλοῖ οἱ δὲ πεπλεγμένοι·</span>
+  <span data-start="7.15">καὶ γὰρ αἱ πράξεις,</span>
+  <span data-start="8.8">ὧν μιμήσεις οἱ μῦθοί εἰσιν,</span>
+  <span data-start="11.67">ὑπάρχουσιν εὐθὺς οὖσαι τοιαῦται.</span>
+  <span data-start="15.71">Λέγω δὲ ἁπλῆν μὲν πρᾶξιν,</span>
+  <span data-start="18.66">ἧς γινομένης,</span>
+  <span data-start="20.11">ὥσπερ ὥρισται,</span>
+  <span data-start="21.46">συνεχοῦς καὶ μιᾶς ἄνευ περιπετείας ἢ ἀναγνωρισμοῦ ἡ μετάβασις γίνεται,</span>
+  <span data-start="28.86">πεπλεγμένην δέ,</span>
+  <span data-start="30.14">ἐξ ἧς μετ᾿ ἀναγνωρισμοῦ ἢ περιπετείας ἢ ἀμφοῖν ἡ μετάβασίς ἐστιν.</span>
+  <span data-start="37.63">Ταῦτα δὲ δεῖ γίνεσθαι ἐξ αὐτῆς τῆς συστάσεως τοῦ μύθου,</span>
+  <span data-start="42.75">ὥστε ἐκ τῶν προγεγενημένων συμβαίνειν ἢ ἐξ ἀνάγκης ἢ κατὰ τὸ εἰκὸς γίνεσθαι ταῦτα·</span>
+  <span data-start="51.05">διαφέρει γὰρ πολὺ τὸ γίνεσθαι τάδε διὰ τάδε ἢ μετὰ τάδε.</span>
 </p>
 
 <audio id="audio" controls>
@@ -86,37 +60,38 @@ time_stamp =
 
 <script>
 const audio = document.getElementById("audio");
-const phrases = document.querySelectorAll("#text > span[data-start]");
-const words = document.querySelectorAll("#text span.word");
+const words = document.querySelectorAll("#text span");
 
-console.log("Found", phrases.length, "phrases and", words.length, "words");
+console.log("Found", words.length, "words");
 
 audio.addEventListener("timeupdate", () => {
   const time = audio.currentTime;
 
-  phrases.forEach((phrase, index) => {
-    const start = parseFloat(phrase.dataset.start);
-    const nextStart = index < phrases.length - 1 
-      ? parseFloat(phrases[index + 1].dataset.start) 
+  words.forEach((word, index) => {
+    const start = parseFloat(word.dataset.start);
+    const nextStart = index < words.length - 1 
+      ? parseFloat(words[index + 1].dataset.start) 
       : Infinity;
 
     if (time >= start && time < nextStart) {
-      phrase.classList.add("active");
+      word.classList.add("active");
     } else {
-      phrase.classList.remove("active");
+      word.classList.remove("active");
     }
   });
 });
 
-// Add click handler to jump to phrase start time
-phrases.forEach((phrase) => {
-  phrase.addEventListener("click", (e) => {
-    if (e.target.classList.contains("word")) return; // Let word click handler take precedence
-    
+// Add click handler to jump to word start time
+words.forEach((word) => {
+  word.addEventListener("click", (e) => {
     e.stopPropagation();
-    const startTime = parseFloat(phrase.dataset.start);
-    console.log("Clicked phrase, jumping to:", startTime);
+    const startTime = parseFloat(word.dataset.start);
+    console.log("Clicked word, jumping to:", startTime);
+    console.log("Audio current time before:", audio.currentTime);
+    
     audio.currentTime = startTime;
+    
+    console.log("Audio current time after:", audio.currentTime);
   });
 });
 

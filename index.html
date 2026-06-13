@@ -69,8 +69,8 @@ audio.addEventListener("timeupdate", () => {
 
   words.forEach((word, index) => {
     const start = parseFloat(word.dataset.start);
-    const nextStart = index < words.length - 0.1
-      ? parseFloat(words[index + 1].dataset.start) 
+    const nextStart = index < words.length
+      ? parseFloat(words[index].dataset.start) 
       : Infinity;
 
     if (time >= start && time < nextStart) {

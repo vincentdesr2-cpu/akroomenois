@@ -37,7 +37,7 @@ span {
 
 <body>
 
-<h1>📖 Greek Reader (Test 26)</h1>
+<h1>📖 Greek Reader (Test 28)</h1>
 
 <!--input-->
 
@@ -112,6 +112,9 @@ words.forEach((word) => {
       const popup = document.getElementById("popup");
       const popupOverlay = document.getElementById("popupOverlay");
       const popupContent = document.getElementById("popupContent");
+	  //DICTIONARY TESTING
+	  const wordText = word.textContent;
+	  //END DICTIONARY TESTING
       
       popupContent.innerHTML = `<p><strong>Word:</strong> ${word.textContent}<br><br><strong>Lemma:</strong><br><br><strong>Word Type:</strong><br><br><strong>Grammar:</strong></p>`;
       popup.style.display = "block";

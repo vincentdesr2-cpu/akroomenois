@@ -37,7 +37,7 @@ span {
 
 <body>
 
-<h1>📖 Greek Reader (Test 36)</h1>
+<h1>📖 Greek Reader (Test 37)</h1>
 
 <!--input-->
 
@@ -194,6 +194,21 @@ popupOverlay.addEventListener("click", () => {
 
 });
 
+// --- PAUSE WHEN SPACE KEY IS PRESSED ---
+	
+document.addEventListener("keydown", (e) => {
+  // Only react to the space key
+  if (e.code === "Space") {
+    e.preventDefault(); // prevents page scrolling
+
+    if (audio.paused) {
+      audio.play();
+    } else {
+      audio.pause();
+    }
+  }
+});
+	
 // --- SPEED CONTROL ---
 const speedControl = document.getElementById("speedControl");
 const speedValue = document.getElementById("speedValue");

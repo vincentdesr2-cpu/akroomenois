@@ -37,7 +37,7 @@ span {
 
 <body>
 
-<h1>📖 Greek Reader (Test 19)</h1>
+<h1>📖 Greek Reader (Test 20)</h1>
 
 <!--actual code-->
   
@@ -84,25 +84,7 @@ audio.addEventListener("timeupdate", () => {
   });
 });
 
-// Add click handler to jump to word start time
-phrases.forEach((phrase) => {
-  phrase.addEventListener("click", (e) => {
-    // Find the phrase element (could be the target or a parent)
-    let targetPhrase = e.target.closest(".phrase");
-    
-    if (targetPhrase) {
-      const startTime = parseFloat(targetPhrase.dataset.start);
-      console.log("Clicked phrase, jumping to:", startTime);
-      console.log("Audio current time before:", audio.currentTime);
-      
-      audio.currentTime = startTime;
-      
-      console.log("Audio current time after:", audio.currentTime);
-    }
-  });
-});
-
-// Add click handler to words in active phrases
+// Add click handler to words in active phrases (pop up) or words in inactive phrases (jump to start time)
 const words = document.querySelectorAll("#text span.word");
 words.forEach((word) => {
   word.addEventListener("click", (e) => {

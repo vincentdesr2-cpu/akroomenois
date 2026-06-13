@@ -74,7 +74,7 @@ span {
 
 <body>
 
-<h1>📖 Greek Reader (Test 39)</h1>
+<h1>📖 Greek Reader (Test 40)</h1>
 
 <!--input-->
 
@@ -321,17 +321,40 @@ langBtn.addEventListener("click", () => {
   }
 });
 	
-// --- PAUSE WHEN SPACE KEY IS PRESSED ---
+// --- PAUSE WHEN SPACE KEY IS PRESSED AND GO BACK AND FORTH WITH ARROWS ---
 	
 document.addEventListener("keydown", (e) => {
-  // Only react to the space key
-  if (e.code === "Space") {
-    e.preventDefault(); // prevents page scrolling
+  // Prevent scrolling for space + arrows
+  if (["Space", "ArrowLeft", "ArrowRight"].includes(e.code)) {
+    e.preventDefault();
+  }
 
+  // SPACE → play/pause
+  if (e.code === "Space") {
     if (audio.paused) {
       audio.play();
+	playBtn.textContent = "⏸";
     } else {
       audio.pause();
+	playBtn.textContent = "▶️";
+    }
+  }
+
+  // RIGHT → next phrase
+  if (e.code === "ArrowRight") {
+    let index = getCurrentPhraseIndex();
+
+    if (index < phrases.length - 1) {
+      audio.currentTime = parseFloat(phrases[index + 1].dataset.start);
+    }
+  }
+
+  // LEFT → previous phrase
+  if (e.code === "ArrowLeft") {
+    let index = getCurrentPhraseIndex();
+
+    if (index > 0) {
+      audio.currentTime = parseFloat(phrases[index - 1].dataset.start);
     }
   }
 });

@@ -85,7 +85,7 @@ audio.addEventListener("timeupdate", () => {
 words.forEach((word) => {
   word.addEventListener("click", (e) => {
     e.stopPropagation();
-    const startTime = parseFloat(word."data-start");
+    const startTime = parseFloat(word.dataset.start);
     console.log("Clicked word, jumping to:", startTime);
     console.log("Audio current time before:", audio.currentTime);
     

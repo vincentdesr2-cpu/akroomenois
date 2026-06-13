@@ -1,3 +1,5 @@
+modifying version 22
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -37,10 +39,10 @@ span {
 
 <body>
 
-<h1>📖 Greek Reader (Test 22)</h1>
+<h1>📖 Greek Reader (Test 23)</h1>
 
-<!--actual code-->
-  
+<!--input-->
+
 <p id="text">
   <span data-start="2.2" class="phrase"><span class="word">Εἰσὶ</span> <span class="word">δὲ</span> <span class="word">τῶν</span> <span class="word">μύθων</span> <span class="wor">οἱ</span> <span class="word">μὲν</span> <span class="word">ἁπλοῖ</span> <span class="word">οἱ</span> <span class="word">δὲ</span> <span class="word">πεπλεγμένοι</span><span class="punctuation">·</span></span>
   <span data-start="7.15" class="phrase"><span class="word">καὶ</span> <span class="word">γὰρ</span> <span class="word">αἱ</span> <span class="word">πράξεις</span><span class="punctuation">,</span></span>
@@ -61,6 +63,8 @@ span {
   <source src="audio/aristotle_test_audio_2.webm" type="audio/webm">
 </audio>
 
+<!--actual code-->
+
 <div id="popup" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; border: 1px solid #ccc; padding: 20px; z-index: 1000; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.2);">
   <button id="closePopup" style="position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 20px; cursor: pointer;">✕</button>
   <div id="popupContent"></div>
@@ -70,6 +74,7 @@ span {
 <script>
 const audio = document.getElementById("audio");
 const phrases = document.querySelectorAll("#text > span.phrase");
+let wasPlaying = false
 
 console.log("Found", phrases.length, "phrases");
 
@@ -99,8 +104,11 @@ words.forEach((word) => {
     // Check if the word is in an active phrase
     const phrase = word.closest("span.phrase");
     if (phrase && phrase.classList.contains("active")) {
-      // Pause audio
-      audio.pause();
+      // Pause audio and remember if it was playing in the first place
+      
+	wasPlaying = !audio.paused;	
+
+	audio.pause();
       
       // Show popup with word
       const popup = document.getElementById("popup");
@@ -134,11 +142,23 @@ const popup = document.getElementById("popup");
 closePopupBtn.addEventListener("click", () => {
   popup.style.display = "none";
   popupOverlay.style.display = "none";
+
+  if (wasPlaying) {
+    audio.play();
+    wasPlaying = false;
+  }
+
 });
 
 popupOverlay.addEventListener("click", () => {
   popup.style.display = "none";
   popupOverlay.style.display = "none";
+
+  if (wasPlaying) {
+    audio.play();
+    wasPlaying = false;
+  }
+
 });
   
 // Debug: check if audio loads

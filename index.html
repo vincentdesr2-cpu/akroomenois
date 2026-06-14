@@ -147,7 +147,7 @@ span {
 <div id="topBar">
   <button id="homeBtn">🏠</button>
 
-  <div id="title">Ars Poetica — Ioannis Stratakis (test 48)</div>
+  <div id="title">Ars Poetica — Ioannis Stratakis (test 49)</div>
 
   <button id="settingsBtn">⚙️</button>
 </div>
@@ -485,6 +485,9 @@ homeBtn.addEventListener("click", () => {
 });
 
 settingsBtn.addEventListener("click", () => {
+  wasPlaying = !audio.paused;
+  audio.pause();
+  
   settingsPopup.style.display = "block";
   popupOverlay.style.display = "block";
 });
@@ -492,6 +495,10 @@ settingsBtn.addEventListener("click", () => {
 closeSettings.addEventListener("click", () => {
   settingsPopup.style.display = "none";
   popupOverlay.style.display = "none";
+
+  if (wasPlaying) {
+    audio.play();
+    wasPlaying = false;
 });
 
 popupOverlay.addEventListener("click", () => {

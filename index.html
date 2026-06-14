@@ -236,6 +236,12 @@ span {
 const audio = document.getElementById("audio");
 const phrases = document.querySelectorAll("#text > span.phrase");
 let wasPlaying = false
+// Check if any modal/popup is currently open
+function isPopupActive() {
+  const popup = document.getElementById("popup");
+  const settingsPopup = document.getElementById("settingsPopup");
+  return popup.style.display === "block" || settingsPopup.style.display === "block";
+}
 
 console.log("Found", phrases.length, "phrases");
 

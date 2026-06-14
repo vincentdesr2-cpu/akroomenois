@@ -147,7 +147,7 @@ span {
 <div id="topBar">
   <button id="homeBtn">🏠</button>
 
-  <div id="title">Ars Poetica — Ioannis Stratakis (test 46)</div>
+  <div id="title">Ars Poetica — Ioannis Stratakis (test 47)</div>
 
   <button id="settingsBtn">⚙️</button>
 </div>
@@ -215,13 +215,19 @@ span {
 <!--player bar-->
 	
 <div id="playerBar">
-  <button id="prevBtn">⏮</button>
-  <button id="playBtn">▶️</button>
-  <button id="nextBtn">⏭</button>
-
+  <button id="prevBtn">
+	<img src="icon/play-backwards.svg" alt="Backward" width="32" height="32">
+  </button>
+  <button id="playBtn">
+	<img src="icon/play-button.svg" alt="Play" width="32" height="32">
+  </button>
+  <button id="nextBtn">
+	<img src="icon/play-pause.svg" alt="Forward" width="32" height="32">
+  </button>
+	  
   <input type="range" id="progressBar" value="0" min="0" step="0.1">
 
-  <button id="langBtn">🌐 Greek</button>
+  <button id="langBtn">GR</button>
 </div>
 	
 <!--actual actual code-->
@@ -327,12 +333,12 @@ const playBtn = document.getElementById("playBtn");
 playBtn.addEventListener("click", () => {
   if (audio.paused) {
     audio.play();
-    playBtn.textContent = "⏸";
+    playBtn.innerHTML = <img src="icon/play-pause.svg" alt="Play" width="32" height="32">;
   } else {
     audio.pause();
-    playBtn.textContent = "▶️";
+    playBtn.innerHTML = <img src="icon/play-button.svg" alt="Play" width="32" height="32">;
   }
-});
+});	
 
 const progressBar = document.getElementById("progressBar");
 
@@ -390,9 +396,9 @@ const langBtn = document.getElementById("langBtn");
 
 langBtn.addEventListener("click", () => {
   if (langBtn.textContent.includes("Greek")) {
-    langBtn.textContent = "🌐 English";
+    langBtn.textContent = "EN";
   } else {
-    langBtn.textContent = "🌐 Greek";
+    langBtn.textContent = "GR";
   }
 });
 	
@@ -408,10 +414,10 @@ document.addEventListener("keydown", (e) => {
   if (e.code === "Space") {
     if (audio.paused) {
       audio.play();
-	playBtn.textContent = "⏸";
+	playBtn.innerHTML = <img src="icon/play-pause.svg" alt="Play" width="32" height="32">;
     } else {
       audio.pause();
-	playBtn.textContent = "▶️";
+	playBtn.innerHTML = <img src="icon/play-button.svg" alt="Play" width="32" height="32">;
     }
   }
 

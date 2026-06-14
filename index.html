@@ -147,7 +147,7 @@ span {
 <div id="topBar">
   <button id="homeBtn">🏠</button>
 
-  <div id="title">Ars Poetica — Ioannis Stratakis (test 51)</div>
+  <div id="title">Ars Poetica — Ioannis Stratakis (test 52)</div>
 
   <button id="settingsBtn">⚙️</button>
 </div>
@@ -267,7 +267,7 @@ const words = document.querySelectorAll("#text span.word");
 words.forEach((word) => {
   word.addEventListener("click", (e) => {
     e.stopPropagation();
-    
+    if (isPopupActive()) return;
     // Check if the word is in an active phrase
     const phrase = word.closest("span.phrase");
     if (phrase && phrase.classList.contains("active")) {
@@ -336,7 +336,10 @@ popupOverlay.addEventListener("click", () => {
 	
 const playBtn = document.getElementById("playBtn");
 
+// PLAY BUTTON
 playBtn.addEventListener("click", () => {
+  if (isPopupActive()) return; // 🛑 Block if popup is open
+  
   if (audio.paused) {
     audio.play();
     playBtn.innerHTML = '<img src="icon/play-pause.svg" alt="Pause" width="32" height="32">';
@@ -344,7 +347,7 @@ playBtn.addEventListener("click", () => {
     audio.pause();
     playBtn.innerHTML = '<img src="icon/play-button.svg" alt="Play" width="32" height="32">';
   }
-});	
+});
 
 const progressBar = document.getElementById("progressBar");
 
@@ -387,16 +390,20 @@ function getCurrentPhraseIndex() {
   return -1;
 }
 
-// NEXT
+// NEXT BUTTON
 nextBtn.addEventListener("click", () => {
+  if (isPopupActive()) return; // 🛑 Block if popup is open
+  
   let index = getCurrentPhraseIndex();
   if (index < phrases.length - 1) {
     audio.currentTime = parseFloat(phrases[index + 1].dataset.start);
   }
 });
 
-// PREVIOUS
+// PREVIOUS BUTTON
 prevBtn.addEventListener("click", () => {
+  if (isPopupActive()) return; // 🛑 Block if popup is open
+  
   let index = getCurrentPhraseIndex();
   if (index > 0) {
     audio.currentTime = parseFloat(phrases[index - 1].dataset.start);
@@ -416,6 +423,7 @@ langBtn.addEventListener("click", () => {
 // --- PAUSE WHEN SPACE KEY IS PRESSED AND GO BACK AND FORTH WITH ARROWS ---
 	
 document.addEventListener("keydown", (e) => {
+  if (isPopupActive()) return;
   // Prevent scrolling for space + arrows
   if (["Space", "ArrowLeft", "ArrowRight"].includes(e.code)) {
     e.preventDefault();

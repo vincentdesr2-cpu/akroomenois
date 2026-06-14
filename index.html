@@ -147,7 +147,7 @@ span {
 <div id="topBar">
   <button id="homeBtn">🏠</button>
 
-  <div id="title">Ars Poetica — Ioannis Stratakis (test 50)</div>
+  <div id="title">Ars Poetica — Ioannis Stratakis (test 51)</div>
 
   <button id="settingsBtn">⚙️</button>
 </div>
@@ -360,6 +360,11 @@ audio.addEventListener("timeupdate", () => {
 
 // User drags bar
 progressBar.addEventListener("input", () => {
+  if (isPopupActive()) {
+    // Force the slider to stay at the current audio time if they try to drag it
+    progressBar.value = audio.currentTime;
+    return;
+  }
   audio.currentTime = progressBar.value;
 });
 

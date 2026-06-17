@@ -1,1 +1,114 @@
 
+  @font-face {
+  font-family: "SBL";
+  src: url("font/SBL_BLit.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+body {
+  font-family: SBL;
+  padding: 120px 80px 100px;
+}
+
+#progressBar {
+  flex: 1;
+  accent-color:#e06e04; /* Changes the thumb and progress fill automatically */
+  cursor: pointer;
+}
+	
+#text {
+  font-size: 70px;
+  line-height: 1.6;
+  text-align: justify;
+}
+
+span {
+  padding: 0px;
+  cursor: pointer;
+}
+
+.active {
+  background-color: #a8fff1;
+  border-radius: 6px;
+  box-shadow: 0 0 0 6px #a8fff1;
+}
+
+#playerBar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+
+  background: #222;
+  color: white;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 10px;
+  box-sizing: border-box;
+
+  z-index: 1000;
+}
+
+#playerBar button {
+  background: #444;
+  border: none;
+  color: white;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+#playerBar button:hover {
+  background: #666;
+}
+
+#progressBar {
+  flex: 1;
+}
+
+#topBar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+
+  background: #222;
+  color: white;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 10px;
+  box-sizing: border-box;
+
+  z-index: 1000;
+}
+
+/* center the title properly */
+#title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-weight: bold;
+}
+
+/* match your bottom bar style */
+#topBar button {
+  background: #444;
+  border: none;
+  color: white;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+#topBar button:hover {
+  background: #666;
+}
+	

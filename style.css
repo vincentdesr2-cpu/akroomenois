@@ -64,7 +64,7 @@ span {
 .phrase {
   border-radius: 6px;        /* Softens the highlight edges slightly */
   padding: 2px 4px;          /* Gives the highlight background a tiny bit of breathing room */
-  color: #4a4a4a;            /* Your standard inactive text color */
+  color: #000000;
   background-color: transparent;
 
   /* THE MAGIC LINE: Tells the browser to smoothly animate color changes over 0.3 seconds */

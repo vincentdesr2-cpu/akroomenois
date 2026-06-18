@@ -24,7 +24,7 @@
 }
 
 body {
-  font-family: "EB Garamond", serif;
+  font-family: EB Garamond;
   padding: 120px 80px 100px;
 }
 
@@ -35,14 +35,14 @@ body {
 }
 	
 #text {
-  font-family: "SBL", serif;
+  font-family: SBL;
   font-size: 70px;
   line-height: 1.6;
   text-align: justify;
 }
 
 #text_en {
-  font-family: "EB Garamond", serif;
+  font-family: EB Garamond;
   font-size: 70px;
   line-height: 1.6;
   text-align: justify;

@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Greek Reader</title>
+<title>Greek Reader (test 62 or 63 or whatever)</title>
   <link rel="stylesheet" href="style.css">
 </head>
 
@@ -30,76 +30,6 @@
   <source src="audio/aristotle_test_audio_2.webm" type="audio/webm">
 </audio>
 
-<!--all the div id's-->
-
-<!--top bar-->
-	
-<div id="topBar">
-  <button id="homeBtn">🏠</button>
-
-  <div id="title">Ars Poetica — Ioannis Stratakis (test 61)</div>
-
-  <button id="settingsBtn">⚙️</button>
-</div>
-
-<!--dictionary pop up-->
-	
-<div id="popup">
-  <button id="closePopup">✕</button>
-  <div id="popupContent"></div>
-</div>
-<div id="popupOverlay"></div>
-
-<!--settings pop up-->
-
-<div id="settingsPopup">
-  <button id="closeSettings">✕</button>
-
-  <h3>Settings</h3>
-
-  <h3>Settings</h3>
-
-	<label>
-	  Speed:
-	  <input type="range" id="speedControl" step="0.1">
-	  <span id="speedValue"></span>
-	</label>
-	
-	<br><br>
-	
-	<label>
-	  Text size:
-	  <input type="range" id="fontControl" step="1">
-	  <span id="fontValue"></span>
-	</label>
-	
-	<br><br>
-	
-	<label for="volumeControl">Volume:</label>
-	<input type="range" id="volumeControl" step="0.01">
-	<span id="volumeValue"></span>
-
-</div>
-	
-<!--player bar-->
-	
-<div id="playerBar">
-  <button id="prevBtn">
-	<img src="icon/play-backwards.svg" alt="Backward" width="32" height="32">
-  </button>
-  <button id="playBtn">
-	<img src="icon/play-button.svg" alt="Play" width="32" height="32">
-  </button>
-  <button id="nextBtn">
-	<img src="icon/play-forwards.svg" alt="Forward" width="32" height="32">
-  </button>
-	  
-  <input type="range" id="progressBar" value="0" min="0" step="0.1">
-
-  <button id="langBtn">GR</button>
-</div>
-	
-<!--actual code-->
 <script src="script.js"></script>
 </body>
 </html>

@@ -7,8 +7,16 @@
   font-display: swap;
 }
 
+  @font-face {
+  font-family: "EB Garamond";
+  src: url("font/EBGaramond12-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 body {
-  font-family: SBL;
+  font-family: "EB Garamond", serif;
   padding: 120px 80px 100px;
 }
 
@@ -19,12 +27,14 @@ body {
 }
 	
 #text {
+  font-family: "SBL", serif;
   font-size: 70px;
   line-height: 1.6;
   text-align: justify;
 }
 
 #text_en {
+  font-family: "EB Garamond", serif;
   font-size: 70px;
   line-height: 1.6;
   text-align: justify;

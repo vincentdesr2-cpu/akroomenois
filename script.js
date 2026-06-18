@@ -192,8 +192,21 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+  // Restore Progress
   audio.addEventListener("loadedmetadata", () => {
     progressBar.max = audio.duration;
+
+    // Load and restore saved listening time
+    const savedTime = localStorage.getItem("reader_currentTime");
+    if (savedTime) {
+      const targetTime = parseFloat(savedTime);
+      
+      // Safety check: Make sure the saved time fits within the current track length
+      if (targetTime < audio.duration) {
+        audio.currentTime = targetTime;
+        progressBar.value = targetTime;
+      }
+    }
   });
 
   // Handle Clicking Words
@@ -291,6 +304,20 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  // Save current listening position on pause or track scrubbing
+  audio.addEventListener("pause", () => {
+    localStorage.setItem("reader_currentTime", audio.currentTime);
+  });
+
+  progressBar.addEventListener("change", () => {
+    localStorage.setItem("reader_currentTime", audio.currentTime);
+  });
+
+  // Backup: Save time if they close the tab or navigate away while playing
+  window.addEventListener("beforeunload", () => {
+    localStorage.setItem("reader_currentTime", audio.currentTime);
+  });
+  
   // ==========================================
   // SLIDERS & CONTROLS OPERATIONAL EVENT LISTENERS
   // ==========================================

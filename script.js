@@ -86,25 +86,59 @@ document.addEventListener("DOMContentLoaded", () => {
   let wasPlaying = false;
   let currentActive = null;
 
-  // Setup Config Boundaries on Sliders
+  // ==========================================
+  // SETUP CONFIG BOUNDARIES & LOAD SAVED PREFERENCES
+  // ==========================================
+  
+  // 1. Text Size
   if (fontControl && fontValue) {
     fontControl.min = SITE_SETTINGS.fontSize.min;
     fontControl.max = SITE_SETTINGS.fontSize.max;
-    fontControl.value = SITE_SETTINGS.fontSize.default;
-    fontValue.textContent = SITE_SETTINGS.fontSize.default + "px";
+    
+    // Load saved font size or use default
+    const savedFontSize = localStorage.getItem("reader_fontSize") || SITE_SETTINGS.fontSize.default;
+    fontControl.value = savedFontSize;
+    fontValue.textContent = savedFontSize + "px";
+    
+    // Apply to text containers immediately
+    if (text) text.style.fontSize = savedFontSize + "px";
+    if (textEn) textEn.style.fontSize = savedFontSize + "px";
   }
+
+  // 2. Greek Font Family
+  if (fontFamilyControl && text) {
+    // Load saved font family or default to SBL
+    const savedFontFamily = localStorage.getItem("reader_fontFamily") || "SBL";
+    fontFamilyControl.value = savedFontFamily;
+    text.style.fontFamily = savedFontFamily;
+  }
+
+  // 3. Playback Speed
   if (speedControl && speedValue) {
     speedControl.min = SITE_SETTINGS.playerSpeed.min;
     speedControl.max = SITE_SETTINGS.playerSpeed.max;
-    speedControl.value = SITE_SETTINGS.playerSpeed.default;
-    speedValue.textContent = Number(SITE_SETTINGS.playerSpeed.default).toFixed(1) + "x";
+    
+    // Load saved speed or use default
+    const savedSpeed = localStorage.getItem("reader_playerSpeed") || SITE_SETTINGS.playerSpeed.default;
+    speedControl.value = savedSpeed;
+    speedValue.textContent = Number(savedSpeed).toFixed(1) + "x";
+    
+    // Apply speed to audio once metadata loads to ensure it sticks
+    audio.addEventListener("loadedmetadata", () => {
+      audio.playbackRate = parseFloat(savedSpeed);
+    });
   }
+
+  // 4. Volume
   if (volumeControl && volumeValue) {
     volumeControl.min = SITE_SETTINGS.volume.min;
     volumeControl.max = SITE_SETTINGS.volume.max;
-    volumeControl.value = SITE_SETTINGS.volume.default;
-    volumeValue.textContent = (SITE_SETTINGS.volume.default * 100) + "%";
-    audio.volume = volumeControl.value;
+    
+    // Load saved volume or use default
+    const savedVolume = localStorage.getItem("reader_volume") || SITE_SETTINGS.volume.default;
+    volumeControl.value = savedVolume;
+    volumeValue.textContent = Math.round(savedVolume * 100) + "%";
+    audio.volume = parseFloat(savedVolume);
   }
 
   // Helper check for active popups
@@ -257,11 +291,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Sliders Operational Event Listeners
+  // ==========================================
+  // SLIDERS & CONTROLS OPERATIONAL EVENT LISTENERS
+  // ==========================================
+
   speedControl.addEventListener("input", () => {
     const speed = parseFloat(speedControl.value);
     audio.playbackRate = speed;
     speedValue.textContent = speed.toFixed(1) + "x";
+    localStorage.setItem("reader_playerSpeed", speed); // Save preference
   });
 
   fontControl.addEventListener("input", () => {
@@ -274,8 +312,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (textEn) textEn.style.fontSize = size;
     
     fontValue.textContent = size;
-
-    
+    localStorage.setItem("reader_fontSize", fontControl.value); // Save preference
   });
 
   // Font Family Operational Event Listener
@@ -283,6 +320,7 @@ document.addEventListener("DOMContentLoaded", () => {
     fontFamilyControl.addEventListener("change", () => {
       if (text) {
         text.style.fontFamily = fontFamilyControl.value;
+        localStorage.setItem("reader_fontFamily", fontFamilyControl.value); // Save preference
       }
     });
   }
@@ -290,6 +328,7 @@ document.addEventListener("DOMContentLoaded", () => {
   volumeControl.addEventListener("input", () => {
     audio.volume = volumeControl.value;
     volumeValue.textContent = Math.round(volumeControl.value * 100) + "%";
+    localStorage.setItem("reader_volume", volumeControl.value); // Save preference
   });
 
   // Settings Actions

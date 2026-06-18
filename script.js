@@ -296,7 +296,17 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   langBtn.addEventListener("click", () => {
-    langBtn.textContent = langBtn.textContent.includes("GR") ? "EN" : "GR";
+    if (langBtn.textContent === "GR") {
+      // Switch to English mode
+      langBtn.textContent = "EN";
+      text.style.display = "none";    // Hides Greek
+      textEn.style.display = "block"; // Shows English
+    } else {
+      // Switch back to Greek mode
+      langBtn.textContent = "GR";
+      text.style.display = "block";   // Shows Greek
+      textEn.style.display = "none";  // Hides English
+    }
   });
 
   // Keyboard Navigation Bindings

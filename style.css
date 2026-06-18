@@ -63,7 +63,7 @@ span {
 /* 1. Base phrase state */
 .phrase {
   border-radius: 6px;        /* Softens the highlight edges slightly */
-  padding: 2px 4px;          /* Gives the highlight background a tiny bit of breathing room */
+  padding: 4px 8px;          /* Gives the highlight background a tiny bit of breathing room */
   color: #000000;
   background-color: transparent;
 
@@ -73,7 +73,6 @@ span {
 
 /* 2. Active highlighted state */
 .phrase.active {
-  color: #000000;            /* Darkens text for better readability */
   background-color: #a8fff1
 }
 

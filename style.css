@@ -60,10 +60,21 @@ span {
   cursor: pointer;
 }
 
-.active {
-  background-color: #a8fff1;
-  border-radius: 6px;
-  box-shadow: 0 0 0 6px #a8fff1;
+/* 1. Base phrase state */
+.phrase {
+  border-radius: 6px;        /* Softens the highlight edges slightly */
+  padding: 2px 4px;          /* Gives the highlight background a tiny bit of breathing room */
+  color: #4a4a4a;            /* Your standard inactive text color */
+  background-color: transparent;
+
+  /* THE MAGIC LINE: Tells the browser to smoothly animate color changes over 0.3 seconds */
+  transition: background-color 0.3s ease, color 0.3s ease; 
+}
+
+/* 2. Active highlighted state */
+.phrase.active {
+  color: #000000;            /* Darkens text for better readability */
+  background-color: #a8fff1
 }
 
 #playerBar {

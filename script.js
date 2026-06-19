@@ -59,6 +59,15 @@ document.addEventListener("DOMContentLoaded", () => {
   // ... ALL THE REST OF YOUR EXISTING SCRIPT.JS CODE STAYS EXACTLY THE SAME BELOW THIS ...
   
   // Grab all DOM elements
+
+  const text = document.getElementById("text");
+  const textEn = document.getElementById("text_en");
+
+  // Wipe out any accidental non-breaking spaces ruining the layout
+  if (text) text.innerHTML = text.innerHTML.replace(/\u00A0/g, ' ');
+  if (textEn) textEn.innerHTML = textEn.innerHTML.replace(/\u00A0/g, ' ');
+
+
   const audio = document.getElementById("audio");
   const phrases = document.querySelectorAll("#text > span.phrase");
   const phrasesEn = document.querySelectorAll("#text_en > span.phrase_en");
@@ -78,15 +87,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const speedValue = document.getElementById("speedValue");
   const fontControl = document.getElementById("fontControl");
   const fontValue = document.getElementById("fontValue");
-  const text = document.getElementById("text");
-  const textEn = document.getElementById("text_en");
   const volumeControl = document.getElementById("volumeControl");
   const volumeValue = document.getElementById("volumeValue");
   const fontFamilyControl = document.getElementById("fontFamilyControl");
-
-  // Wipe out any accidental non-breaking spaces ruining the layout
-  if (text) text.innerHTML = text.innerHTML.replace(/\u00A0/g, ' ');
-  if (textEn) textEn.innerHTML = textEn.innerHTML.replace(/\u00A0/g, ' ');
 
 
   let wasPlaying = false;

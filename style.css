@@ -77,6 +77,14 @@ span {
   background-color: #a8fff1
 }
 
+/* 1. Base phrase state */
+.phrase_en {
+  border-radius: 6px;        /* Softens the highlight edges slightly */
+  padding: 4px 8px;          /* Gives the highlight background a tiny bit of breathing room */
+  color: #000000;
+  background-color: transparent;
+}
+
 #playerBar {
   position: fixed;
   bottom: 0;

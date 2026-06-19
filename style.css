@@ -42,6 +42,7 @@ body {
   overflow-wrap: break-word;
   word-break: break-word;
   hyphens: auto;
+  text-wrap: pretty;
 }
 
 #text_en {
@@ -53,6 +54,7 @@ body {
   overflow-wrap: break-word;
   word-break: break-word;
   hyphens: auto;
+  text-wrap: pretty;
 }
 
 #tiny_text {

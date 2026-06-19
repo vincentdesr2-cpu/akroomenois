@@ -157,11 +157,19 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function scrollToTop(el) {
-    window.scrollTo({
-      top: window.scrollY + el.getBoundingClientRect().top - 120, 
-      behavior: "smooth" 
-    });
-  }
+  window.scrollTo({
+    top: window.scrollY + el.getBoundingClientRect().top - 120, 
+    behavior: "smooth" 
+  });
+}
+
+  // instantaneous jumping
+  function jumpToTop(el) {
+  window.scrollTo({
+    top: window.scrollY + el.getBoundingClientRect().top - 120,
+    behavior: "auto" // "auto" means immediate snap, no smooth sliding
+  });
+}
 
   function getCurrentPhraseIndex() {
     const time = audio.currentTime;
@@ -173,34 +181,42 @@ document.addEventListener("DOMContentLoaded", () => {
     return -1;
   }
 
-  // Universal Highlight & Timeline Track
-  audio.addEventListener("timeupdate", () => {
-    const time = audio.currentTime;
-    progressBar.value = time;
 
-    // Determine which language loop to run based on what's visible
+  // makes it so the highlight isnt lost when using the english translation
+  function syncVisibleText(useInstantJump = false) {
+    const time = audio.currentTime;
     const isGreekVisible = (text.style.display !== "none");
     const activePhrasesList = isGreekVisible ? phrases : phrasesEn;
-
+  
     activePhrasesList.forEach((phrase, index) => {
       const start = parseFloat(phrase.dataset.start);
       const nextStart = index < activePhrasesList.length - 1 ? parseFloat(activePhrasesList[index + 1].dataset.start) : Infinity;
-
+  
       if (time >= start && time < nextStart) {
         if (currentActive !== phrase) {
-          // Remove old highlight
+          // Clear previous highlight completely
           if (currentActive) currentActive.classList.remove("active");
           
           currentActive = phrase;
           phrase.classList.add("active");
           
-          // Instantly jump the active text line directly to the top!
-          scrollToTop(phrase);
+          // Choose between a smooth scroll (for normal playback) or a sudden snap (for toggling)
+          if (useInstantJump) {
+            jumpToTop(phrase);
+          } else {
+            scrollToTop(phrase);
+          }
         }
       } else {
         phrase.classList.remove("active");
       }
     });
+  }
+  
+  // Universal Highlight & Timeline Track
+  audio.addEventListener("timeupdate", () => {
+    progressBar.value = audio.currentTime;
+    syncVisibleText(false); // False means use smooth scrolling while audio plays
   });
   
   // ==========================================
@@ -307,9 +323,13 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   langBtn.addEventListener("click", () => {
+    // 1. Completely clear out old highlights across both languages
     if (currentActive) currentActive.classList.remove("active");
-    currentActive = null; // Clear tracking cache
-  
+    phrases.forEach(p => p.classList.remove("active"));
+    phrasesEn.forEach(p => p.classList.remove("active"));
+    currentActive = null; 
+
+    // 2. Toggle the visibility layouts
     if (langBtn.textContent === "GR") {
       langBtn.textContent = "EN";
       text.style.display = "none";
@@ -318,6 +338,14 @@ document.addEventListener("DOMContentLoaded", () => {
       langBtn.textContent = "GR";
       text.style.display = "block";
       textEn.style.display = "none";
+    }
+
+    // 3. Force an instantaneous view alignment and re-highlight, even if paused!
+    syncVisibleText(true); 
+    
+    // 4. Special Polish: If we just went back to Greek, make sure the highlighted line snaps to top
+    if (langBtn.textContent === "GR" && currentActive) {
+      jumpToTop(currentActive);
     }
   });
 

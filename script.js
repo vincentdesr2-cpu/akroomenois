@@ -189,25 +189,10 @@ document.addEventListener("DOMContentLoaded", () => {
           if (text.style.display !== "none") {
             if (isOutOfView(phrase)) scrollToTop(phrase);
           } 
-          // CASE B: English View is visible -> Scroll to the matching English paragraph
+          // CASE B: English View is visible -> Scroll to the matching English paragraph instantly
           else if (textEn && textEn.style.display !== "none") {
-            // Find the closest section text (e.g., "[1]") above or inside this phrase
-            const parentText = phrase.parentElement.textContent || "";
-            const match = phrase.previousSibling?.textContent?.match(/\[\d+\]/) || phrase.textContent.match(/\[\d+\]/);
+            const sectionNum = phrase.dataset.section;
             
-            // If we can't find it immediately, look backward through the text block
-            let sectionNum = null;
-            if (match) {
-              sectionNum = match[0].replace(/[\[\]]/g, "");
-            } else {
-              // Fallback scanner to see what section we are in
-              const rawText = text.innerHTML;
-              const phraseIndex = rawText.indexOf(phrase.outerHTML);
-              const textBeforePhrase = rawText.substring(0, phraseIndex);
-              const sections = textBeforePhrase.match(/\[\d+\]/g);
-              if (sections) sectionNum = sections[sections.length - 1].replace(/[\[\]]/g, "");
-            }
-
             if (sectionNum) {
               const targetEnSection = document.getElementById(`en_${sectionNum}`);
               if (targetEnSection && isOutOfView(targetEnSection)) {

@@ -187,6 +187,7 @@ document.addEventListener("DOMContentLoaded", () => {
           // Only auto-scroll if the Greek text container is actually visible!
           if (isOutOfView(phrase) && text.style.display !== "none") {
             scrollToTop(phrase);
+          }
         }
       } else {
         phrase.classList.remove("active");

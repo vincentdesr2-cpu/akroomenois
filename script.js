@@ -252,20 +252,29 @@ document.addEventListener("DOMContentLoaded", () => {
     return `${mins}:${formattedSecs}`;
   }
 
-  // Handle Clicking Note Markers
+  // Handle Clicking Note Markers (With Auto-URL Linking)
+  const notes = document.querySelectorAll(".note-marker");
   notes.forEach((note) => {
     note.addEventListener("click", (e) => {
-      e.stopPropagation(); // Prevents the phrase from skipping audio position
+      e.stopPropagation(); 
       if (isPopupActive()) return;
 
-      // Pause the audio while the reader looks at the commentary
       wasPlaying = !audio.paused; 
       audio.pause();
 
-      // Extract the metadata string directly from the data-note attribute
-      const noteContent = note.dataset.note || "No note data available.";
+      let noteContent = note.dataset.note || "No note data available.";
 
-      // Inject the text cleanly into your existing popup markup
+      // REgex to find URLs starting with http://, https://, or www.
+      const urlRegex = /(https?:\/\/[^\s]+|www\.[^\s]+)/g;
+      
+      // Automatically wrap the raw URL inside a clickable anchor tag
+      noteContent = noteContent.replace(urlRegex, (url) => {
+        // Fix URLs missing the protocol prefix so they link externally correctly
+        const hyperLink = url.startsWith("http") ? url : `https://${url}`;
+        return `<a href="${hyperLink}" target="_blank" style="color: #007bff; text-decoration: underline; break-all: break-word;">${url}</a>`;
+      });
+
+      // Inject the processed text safely into your popup window
       popupContent.innerHTML = `
         <div style="font-family: inherit; font-size: 0.9em; padding: 10px; line-height: 1.5;">
           <h3 style="margin-top: 0; color: #a52a2a;">Note</h3>
@@ -273,7 +282,6 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
       `;
 
-      // Pop the existing modal window open
       popup.style.display = "block";
       popupOverlay.style.display = "block";
     });

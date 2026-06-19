@@ -349,9 +349,22 @@ document.addEventListener("DOMContentLoaded", () => {
     // 3. Force an instantaneous view alignment and re-highlight, even if paused!
     syncVisibleText(true); 
     
-    // 4. Special Polish: If we just went back to Greek, make sure the highlighted line snaps to top
+    // 4. EXCEPTION: When RETURNING to Greek, find the first phrase of the current section
     if (langBtn.textContent === "GR" && currentActive) {
-      jumpToTop(currentActive);
+      const currentSecNum = currentActive.dataset.section;
+      
+      if (currentSecNum) {
+        // Find the absolute first Greek phrase assigned to this data-section
+        const firstPhraseOfSection = Array.from(phrases).find(p => p.dataset.section === currentSecNum);
+        
+        if (firstPhraseOfSection) {
+          jumpToTop(firstPhraseOfSection); // Snap the paragraph beginning to the top line!
+        } else {
+          jumpToTop(currentActive); // Fallback safety snap
+        }
+      } else {
+        jumpToTop(currentActive); // Fallback if no section data exists (like the title)
+      }
     }
   });
 

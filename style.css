@@ -39,6 +39,9 @@ body {
   font-size: 70px;
   line-height: 1.6;
   text-align: justify;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
 }
 
 #text_en {
@@ -47,6 +50,9 @@ body {
   line-height: 1.6;
   text-align: justify;
   display: none;
+	overflow-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
 }
 
 #tiny_text {

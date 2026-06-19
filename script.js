@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const volumeValue = document.getElementById("volumeValue");
   const fontFamilyControl = document.getElementById("fontFamilyControl");
   const timeDisplay = document.getElementById("timeDisplay");
-
+  const notes = document.querySelectorAll(".note-marker");
 
   let wasPlaying = false;
   let currentActive = null;
@@ -251,6 +251,33 @@ document.addEventListener("DOMContentLoaded", () => {
     
     return `${mins}:${formattedSecs}`;
   }
+
+  // Handle Clicking Note Markers
+  notes.forEach((note) => {
+    note.addEventListener("click", (e) => {
+      e.stopPropagation(); // Prevents the phrase from skipping audio position
+      if (isPopupActive()) return;
+
+      // Pause the audio while the reader looks at the commentary
+      wasPlaying = !audio.paused; 
+      audio.pause();
+
+      // Extract the metadata string directly from the data-note attribute
+      const noteContent = note.dataset.note || "No note data available.";
+
+      // Inject the text cleanly into your existing popup markup
+      popupContent.innerHTML = `
+        <div style="font-family: inherit; font-size: 0.9em; padding: 10px; line-height: 1.5;">
+          <h3 style="margin-top: 0; color: #a52a2a;">Note</h3>
+          <p>${noteContent}</p>
+        </div>
+      `;
+
+      // Pop the existing modal window open
+      popup.style.display = "block";
+      popupOverlay.style.display = "block";
+    });
+  });
   
   // ==========================================
   // RESILIENT PROGRESS AND METADATA RESTORATION

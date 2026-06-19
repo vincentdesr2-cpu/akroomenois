@@ -521,4 +521,26 @@ document.addEventListener("DOMContentLoaded", () => {
     popupOverlay.style.display = "none";
     if (wasPlaying) { audio.play(); wasPlaying = false; }
   });
+
+  // ==========================================
+  // ANCIENT GREEK AUTOMATED HYPHENATION ENGINE
+  // ==========================================
+  if (typeof Hypher !== "undefined" && typeof HyphenationPatterns !== "undefined") {
+    // Initialize Hypher with the Ancient Greek dictionary patterns we loaded
+    const greekHypher = new Hypher(HyphenationPatterns.grc);
+
+    // Target every single individual Greek word span in your text
+    const greekWords = document.querySelectorAll("#text span.word");
+    
+    greekWords.forEach(wordElement => {
+      const originalText = wordElement.textContent;
+      
+      // Let Hypher automatically calculate and inject the soft hyphen breaks
+      const hyphenatedText = greekHypher.hyphenateText(originalText);
+      
+      // Update the DOM text with the new hyphen layout placeholders
+      wordElement.textContent = hyphenatedText;
+    });
+  }
+  
 });

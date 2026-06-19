@@ -194,16 +194,22 @@ document.addEventListener("DOMContentLoaded", () => {
   
       if (time >= start && time < nextStart) {
         if (currentActive !== phrase) {
-          // Clear previous highlight completely
           if (currentActive) currentActive.classList.remove("active");
           
           currentActive = phrase;
           phrase.classList.add("active");
           
-          // Choose between a smooth scroll (for normal playback) or a sudden snap (for toggling)
+          // --- CONTROL THE SCROLLING BEHAVIOR HERE ---
           if (useInstantJump) {
+            // Rule 1: Toggling languages? Snap instantly to the top right now.
             jumpToTop(phrase);
+          } else if (isGreekVisible) {
+            // Rule 2: Normal Greek reading? Only scroll smoothly if it gets out of sight!
+            if (isOutOfView(phrase)) {
+              scrollToTop(phrase);
+            }
           } else {
+            // Rule 3: Normal English reading? Smoothly pin it to the top.
             scrollToTop(phrase);
           }
         }

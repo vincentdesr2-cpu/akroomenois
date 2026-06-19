@@ -189,13 +189,14 @@ document.addEventListener("DOMContentLoaded", () => {
           if (text.style.display !== "none") {
             if (isOutOfView(phrase)) scrollToTop(phrase);
           } 
-          // CASE B: English View is visible -> Scroll to the matching English paragraph instantly
+          // CASE B: English View is visible -> Force the active paragraph directly to the top
           else if (textEn && textEn.style.display !== "none") {
             const sectionNum = phrase.dataset.section;
             
             if (sectionNum) {
               const targetEnSection = document.getElementById(`en_${sectionNum}`);
-              if (targetEnSection && isOutOfView(targetEnSection)) {
+              if (targetEnSection) {
+                // No view checking, no lag—just jump it straight up
                 scrollToTop(targetEnSection);
               }
             }

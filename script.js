@@ -101,6 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const savedFontSize = localStorage.getItem("reader_fontSize") || SITE_SETTINGS.fontSize.default;
     fontControl.value = savedFontSize;
     fontValue.textContent = savedFontSize + "px";
+    fontValie.textEnContent = savedFontSize + "px";
     
     // Apply to text containers immediately
     if (text) text.style.fontSize = savedFontSize + "px";

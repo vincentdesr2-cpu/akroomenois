@@ -397,7 +397,28 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
   }
+
+  function getLineCount(element) {
+    if (!element) return 0;
   
+    // 1. Get the exact rendered height of the paragraph (in pixels)
+    const elementHeight = element.offsetHeight;
+  
+    // 2. Compute the exact line-height the browser is currently applying
+    const computedStyle = window.getComputedStyle(element);
+    let lineHeight = parseFloat(computedStyle.lineHeight);
+  
+    // Fallback safety: If line-height is set to "normal", 
+    // browsers approximate it to ~1.2 times the current font size.
+    if (isNaN(lineHeight)) {
+      const fontSize = parseFloat(computedStyle.fontSize);
+      lineHeight = fontSize * 1.2; 
+    }
+  
+    // 3. Divide the total height by the height of one line
+    return Math.round(elementHeight / lineHeight);
+  }
+    
   // ==========================================
   // RESILIENT PROGRESS AND METADATA RESTORATION
   // ==========================================

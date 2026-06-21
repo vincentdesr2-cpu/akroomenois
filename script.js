@@ -65,9 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const textEn = document.getElementById("text_en");
   const audio = document.getElementById("audio");
   const phrases = document.querySelectorAll("#text > span.phrase");
-
-  const words = document.querySelectorAll("#text > span.word");
-  
+  const words = document.querySelectorAll("#text span.word");
   const phrasesEn = document.querySelectorAll("#text_en > span.phrase_en");
   const settingsPopup = document.getElementById("settingsPopup");
   const closeSettings = document.getElementById("closeSettings");
@@ -179,6 +177,25 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 }
 
+  function checkAndCorrectWordVisibility() {
+    const activeWord = document.querySelector("#text span.word.active");
+    if (!activeWord) return;
+  
+    const wordRect = activeWord.getBoundingClientRect();
+    const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+  
+    // 40px padding buffer from the bottom of the screen
+    const bottomBuffer = 40; 
+  
+    // If the word drops below the screen limits, put it cleanly at the top line instead!
+    if (wordRect.bottom > (viewportHeight - bottomBuffer)) {
+      window.scrollTo({
+        top: window.scrollY + wordRect.top - 120, // Puts it at the exact same top margin as your phrase headers
+        behavior: "smooth"
+      });
+    }
+  }
+  
   function getCurrentPhraseIndex() {
     const time = audio.currentTime;
     for (let i = 0; i < phrases.length; i++) {
@@ -244,9 +261,48 @@ document.addEventListener("DOMContentLoaded", () => {
   // Universal Highlight & Timeline Track
   audio.addEventListener("timeupdate", () => {
     progressBar.value = audio.currentTime;
-    syncVisibleText(false); // False means use smooth scrolling while audio plays
     
-    // NEW: Update the clock string dynamically
+    // Track if the phrase changes during this tick
+    const oldActivePhrase = currentActive;
+    
+    syncVisibleText(false); // Run your default phrase alignment mechanics
+    
+    const isGreekVisible = (text.style.display !== "none");
+    
+    // Word Highlight Handling (Only applies when reading the Greek text layout)
+    if (isGreekVisible) {
+      const currentWordIndex = getCurrentWordIndex();
+      
+      // Clear out the previous word highlight
+      const previousActiveWord = document.querySelector("#text span.word.active");
+      if (previousActiveWord) {
+        previousActiveWord.classList.remove("active");
+      }
+      
+      // Highlight the active playing word
+      if (currentWordIndex !== -1) {
+        words[currentWordIndex].classList.add("active");
+      }
+    }
+  
+    // Check if a brand new phrase has been activated during this update tick
+    const isNewPhraseStarted = (currentActive !== oldActivePhrase && currentActive !== null);
+  
+    if (isGreekVisible) {
+      if (isNewPhraseStarted) {
+        // If a new phrase jumped, wait a split second for the page position to settle, 
+        // then make sure the word isn't pushed out of frame at the bottom.
+        requestAnimationFrame(() => {
+          checkAndCorrectWordVisibility();
+        });
+      } else {
+        // If we are just reading word-by-word inside the same line, check continuously
+        // to see if the highlighting wrapped onto a hidden line.
+        checkAndCorrectWordVisibility();
+      }
+    }
+    
+    // Update the clock string dynamically
     if (timeDisplay) {
       timeDisplay.textContent = `${formatTime(audio.currentTime)} / ${formatTime(audio.duration)}`;
     }
@@ -339,7 +395,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Handle Clicking Words
-  const words = document.querySelectorAll("#text span.word");
   words.forEach((word) => {
     word.addEventListener("click", (e) => {
       e.stopPropagation();

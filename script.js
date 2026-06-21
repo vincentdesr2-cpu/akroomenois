@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ==========================================
   const interfaceHTML = `
     <div id="topBar">
-      <button id="homeBtn">🏠</button>
+      <button id="homeBtn">🏠🏠</button>
       <div id="title">${document.title}</div> <button id="settingsBtn">⚙️</button>
     </div>
 
@@ -354,41 +354,46 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!speakBtn) return;
 
     speakBtn.addEventListener("click", () => {
-      // If a word is already playing, stop it first
       if (dictAudioInstance) {
         dictAudioInstance.pause();
         dictAudioInstance = null;
       }
 
       const start = parseFloat(speakBtn.dataset.start);
-      const end = parseFloat(speakBtn.dataset.end);
+      let end = parseFloat(speakBtn.dataset.end);
 
       if (isNaN(start) || isNaN(end) || start === 0) return;
 
-      // Find the active audio file source matching the main player layout
       const mainAudioSource = audio.querySelector("source");
       const audioUrl = mainAudioSource ? mainAudioSource.src : audio.src;
 
       if (!audioUrl) return;
 
-      // Spin up an entirely separate audio node in the background DOM
       dictAudioInstance = new Audio(audioUrl);
       
-      // Inherit the same playback rate preference selected by the user in settings!
       if (speedControl) {
         dictAudioInstance.playbackRate = parseFloat(speedControl.value);
       }
 
-      // Force jump directly to the beginning of the word pronunciation
       dictAudioInstance.currentTime = start;
       dictAudioInstance.play();
 
-      // Monitor timeline updates only for this temporary background stream
-      dictAudioInstance.addEventListener("timeupdate", () => {
-        if (dictAudioInstance && dictAudioInstance.currentTime >= end) {
+      // High-Precision Engine Loop (Checks timestamps up to 120 times a second)
+      function checkPrecisionTimeline() {
+        if (!dictAudioInstance) return; // Stop loop if cleaned up
+
+        if (dictAudioInstance.currentTime >= adjustedEnd) {
           dictAudioInstance.pause();
           dictAudioInstance = null;
+        } else {
+          // Keep looping dynamically while the audio tracks forward
+          requestAnimationFrame(checkPrecisionTimeline);
         }
+      }
+
+      // Kick off our precision monitor immediately upon playback initiation
+      dictAudioInstance.addEventListener("play", () => {
+        requestAnimationFrame(checkPrecisionTimeline);
       });
     });
   }

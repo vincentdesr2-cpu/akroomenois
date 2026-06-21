@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ==========================================
   const interfaceHTML = `
     <div id="topBar">
-      <button id="homeBtn">🏠🏠</button>
+      <button id="homeBtn">🏠</button>
       <div id="title">${document.title}</div> <button id="settingsBtn">⚙️</button>
     </div>
 
@@ -580,13 +580,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   langBtn.addEventListener("click", () => {
     let activePhraseIndex = -1;
-    let relativeWordProgress = 0.5; // Default to middle
-    let originalGreekWordCenterPageY = 0;
-    
-    // Track how many pixels down from the screen ceiling the word was positioned
-    let originalViewportOffset = 120; 
+    let relativeWordProgress = 0.5; // Default to paragraph middle if no word is highlighted
+    let originalGreekWordViewportTop = 0;
 
-    // Find our current active items before toggling anything
+    // 1. Find our active phrase and word before altering any visibility layouts
     const activeWord = document.querySelector("#text span.word.active");
     const activeGreekPhrase = currentActive || (activeWord ? activeWord.closest("span.phrase") : null);
 
@@ -597,29 +594,27 @@ document.addEventListener("DOMContentLoaded", () => {
       // --- STEP 1: Find height of the Greek paragraph ---
       const greekPhraseRect = activeGreekPhrase.getBoundingClientRect();
       const greekPhraseHeight = greekPhraseRect.height;
-      const greekPhraseTopPageY = window.scrollY + greekPhraseRect.top;
+      const greekPhraseViewportTop = greekPhraseRect.top;
 
       if (activeWord) {
         // --- STEP 2: Find middle point of the Greek active word ---
         const wordRect = activeWord.getBoundingClientRect();
-        originalViewportOffset = wordRect.top; // Save eye level
-        originalGreekWordCenterPageY = window.scrollY + wordRect.top + (wordRect.height / 2);
+        originalGreekWordViewportTop = wordRect.top + (wordRect.height / 2);
 
         // --- STEP 3: Make a percentage based on the position of the word within the paragraph ---
-        relativeWordProgress = (originalGreekWordCenterPageY - greekPhraseTopPageY) / greekPhraseHeight;
+        relativeWordProgress = (originalGreekWordViewportTop - greekPhraseViewportTop) / greekPhraseHeight;
       } else {
-        originalViewportOffset = greekPhraseRect.top;
-        originalGreekWordCenterPageY = greekPhraseTopPageY + (greekPhraseHeight / 2);
+        originalGreekWordViewportTop = greekPhraseViewportTop + (greekPhraseHeight / 2);
         relativeWordProgress = 0.5;
       }
     }
 
-    // Clear active styling safely
+    // Clear active layout visibility tags safely
     if (currentActive) currentActive.classList.remove("active");
     phrases.forEach(p => p.classList.remove("active"));
     phrasesEn.forEach(p => p.classList.remove("active"));
 
-    // --- STEP 4: Switch to English / Greek layout displays ---
+    // --- STEP 4: Switch to English / Greek layout views ---
     const turningToEnglish = (langBtn.textContent === "GR");
     if (turningToEnglish) {
       langBtn.textContent = "EN";
@@ -631,31 +626,28 @@ document.addEventListener("DOMContentLoaded", () => {
       textEn.style.display = "none";
     }
 
-    // Refresh core app highlights
+    // Refresh application styling highlights
     if (activePhraseIndex !== -1) {
       currentActive = turningToEnglish ? phrasesEn[activePhraseIndex] : phrases[activePhraseIndex];
       if (currentActive) currentActive.classList.add("active");
     }
 
-    // --- STEP 5 & 6: Find matching paragraph data and calculate the delta difference ---
+    // --- STEP 5 & 6: Measure target paragraph height and scroll exact pixel difference ---
     if (activePhraseIndex !== -1 && currentActive) {
-      // Temporarily scroll to 0 to measure absolute top position cleanly regardless of page collapse
-      const savedScrollY = window.scrollY;
-      
+      // Find height and window position of the matching target paragraph
       const targetPhraseRect = currentActive.getBoundingClientRect();
       const targetPhraseHeight = targetPhraseRect.height;
-      const targetPhraseTopPageY = savedScrollY + targetPhraseRect.top;
+      const targetPhraseViewportTop = targetPhraseRect.top;
 
-      // Find calculated position in target section
-      const targetEnglishLinePageY = targetPhraseTopPageY + (targetPhraseHeight * relativeWordProgress);
+      // Use the saved percentage to pinpoint the target line inside the new container
+      const targetEnglishLineViewportTop = targetPhraseViewportTop + (targetPhraseHeight * relativeWordProgress);
 
-      // --- STEP 6: Calculate difference and scroll exactly that number of pixels ---
-      // We subtract the original screen offset to keep the word at the exact same vertical eye level
-      const finalScrollTarget = targetEnglishLinePageY - originalViewportOffset;
+      // --- STEP 6: Scroll by the exact pixel coordinate gap ---
+      const scrollDifference = targetEnglishLineViewportTop - originalGreekWordViewportTop;
 
-      window.scrollTo({
-        top: finalScrollTarget,
-        behavior: "auto"
+      window.scrollBy({
+        top: scrollDifference,
+        behavior: "auto" // Instant jump with zero animation layout delay
       });
     }
   });

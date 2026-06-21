@@ -88,7 +88,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const fontFamilyControl = document.getElementById("fontFamilyControl");
   const timeDisplay = document.getElementById("timeDisplay");
   const notes = document.querySelectorAll(".note-marker");
-  const speakBtn = document.getElementById("dictSpeakBtn");
 
   let wasPlaying = false;
   let currentActive = null;
@@ -351,6 +350,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   function setupDictionaryAudioButton() {
+    const speakBtn = document.getElementById("dictSpeakBtn");
     if (!speakBtn) return;
 
     speakBtn.addEventListener("click", () => {
@@ -454,6 +454,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Dictionary Popup Close Actions
   const closePopup = () => {
+    if (dictAudioInstance) {
+      dictAudioInstance.pause();
+      dictAudioInstance = null;
+    }
     popup.style.display = "none";
     popupOverlay.style.display = "none";
     if (wasPlaying) { audio.play(); wasPlaying = false; }

@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ==========================================
   const interfaceHTML = `
     <div id="topBar">
-      <button id="homeBtn">🏠🏠</button>
+      <button id="homeBtn">🏠</button>
       <div id="title">${document.title}</div> <button id="settingsBtn">⚙️</button>
     </div>
 
@@ -579,11 +579,13 @@ document.addEventListener("DOMContentLoaded", () => {
   //});
 
   langBtn.addEventListener("click", () => {
-    // 1. Snapshot exactly where the active word/phrase is on the physical monitor screen right now
-    let screenVisualOffset = 120; // Default fallback spacer matching topBar padding
-    let relativeWordProgress = 0; 
+    // FALLBACK DEFAULTS
+    let finalScrollTarget = window.scrollY;
     let activePhraseIndex = -1;
+    let relativeWordProgress = 0.5; // Default to middle of paragraph if no word is active
+    let originalGreekWordCenterPageY = 0;
 
+    // 1. CHOOSE ACTIVE GREEK ELEMENT WHOPPING PRE-TOGGLE MAPS
     const activeWord = document.querySelector("#text span.word.active");
     const activeGreekPhrase = currentActive || (activeWord ? activeWord.closest("span.phrase") : null);
 
@@ -591,27 +593,31 @@ document.addEventListener("DOMContentLoaded", () => {
       const phrasesArray = Array.from(phrases);
       activePhraseIndex = phrasesArray.indexOf(activeGreekPhrase);
 
-      if (activeWord) {
-        // Find exactly how many pixels down from the browser ceiling the current word line sits
-        const wordRect = activeWord.getBoundingClientRect();
-        screenVisualOffset = wordRect.top; 
+      // --- STEP 1: Find absolute page coordinates of Greek Paragraph ---
+      const greekPhraseRect = activeGreekPhrase.getBoundingClientRect();
+      const greekPhraseTopPageY = window.scrollY + greekPhraseRect.top;
+      const greekPhraseHeight = greekPhraseRect.height;
 
-        // Find progress percentage down into the paragraph chunk
-        const phraseRect = activeGreekPhrase.getBoundingClientRect();
-        relativeWordProgress = (wordRect.top - phraseRect.top) / phraseRect.height;
+      if (activeWord) {
+        // --- STEP 2: Find absolute middle page Y coordinate of active Greek Word ---
+        const wordRect = activeWord.getBoundingClientRect();
+        originalGreekWordCenterPageY = window.scrollY + wordRect.top + (wordRect.height / 2);
+
+        // --- STEP 3: Calculate percentage progress of the word within its paragraph ---
+        relativeWordProgress = (originalGreekWordCenterPageY - greekPhraseTopPageY) / greekPhraseHeight;
       } else {
-        const phraseRect = activeGreekPhrase.getBoundingClientRect();
-        screenVisualOffset = phraseRect.top;
+        // Fallback: If just a phrase is clicked but no word is highlighted yet
+        originalGreekWordCenterPageY = window.scrollY + greekPhraseRect.top + (greekPhraseHeight / 2);
+        relativeWordProgress = 0.5;
       }
     }
 
-    // 2. Clear out old layout highlight class definitions safely
+    // Clear active layout highlighting classes safely
     if (currentActive) currentActive.classList.remove("active");
     phrases.forEach(p => p.classList.remove("active"));
     phrasesEn.forEach(p => p.classList.remove("active"));
-    currentActive = null; 
 
-    // 3. Swap layout displays completely instantly so the page layout boundaries update cleanly
+    // --- STEP 4: Switch layout visibility modes instantly ---
     const turningToEnglish = (langBtn.textContent === "GR");
     if (turningToEnglish) {
       langBtn.textContent = "EN";
@@ -623,32 +629,32 @@ document.addEventListener("DOMContentLoaded", () => {
       textEn.style.display = "none";
     }
 
-    // 4. Update core audio interface track highlights
-    syncVisibleText(false); 
-
-    // 5. Calculate alignment using the updated DOM structure
+    // Refresh application core tracker styling states
     if (activePhraseIndex !== -1) {
-      const targetPhrasesList = turningToEnglish ? phrasesEn : phrases;
-      const targetPhrase = targetPhrasesList[activePhraseIndex];
-
-      if (targetPhrase) {
-        // Calculate the absolute vertical coordinate of the target paragraph
-        const phraseAbsoluteTop = window.scrollY + targetPhrase.getBoundingClientRect().top;
-        const phraseTotalHeight = targetPhrase.getBoundingClientRect().height;
-        
-        // Find our theoretical line index target inside this text chunk using the saved percentage ratio
-        const lineOffsetWithinPhrase = phraseTotalHeight * relativeWordProgress;
-
-        // Perfect target location: Absolute Line Coordinate - Original Viewport Screen Depth Offset
-        const finalScrollTarget = (phraseAbsoluteTop + lineOffsetWithinPhrase) - screenVisualOffset;
-
-        // Instantly align the viewport window scroll tracker
-        window.scrollTo({
-          top: finalScrollTarget,
-          behavior: "auto"
-        });
-      }
+      currentActive = turningToEnglish ? phrasesEn[activePhraseIndex] : phrases[activePhraseIndex];
+      if (currentActive) currentActive.classList.add("active");
     }
+
+    // --- STEP 5 & 6: Math evaluation against updated structural boundaries ---
+    if (activePhraseIndex !== -1 && currentActive) {
+      // Find absolute page coordinates of matching target English Paragraph
+      const targetPhraseRect = currentActive.getBoundingClientRect();
+      const targetPhraseTopPageY = window.scrollY + targetPhraseRect.top;
+      const targetPhraseHeight = targetPhraseRect.height;
+
+      // Map the original word's percentage progress onto this target text block
+      const targetEnglishLinePageY = targetPhraseTopPageY + (targetPhraseHeight * relativeWordProgress);
+
+      // Calculate pixel differential step-shift to force targeted lines into the same screen viewport position
+      const scrollDifference = targetEnglishLinePageY - originalGreekWordCenterPageY;
+      finalScrollTarget = window.scrollY + scrollDifference;
+    }
+
+    // Direct absolute layout jump frame execution
+    window.scrollTo({
+      top: finalScrollTarget,
+      behavior: "auto"
+    });
   });
   
   // Keyboard Navigation Bindings

@@ -229,8 +229,6 @@ document.addEventListener("DOMContentLoaded", () => {
     progressBar.value = audio.currentTime;
     syncVisibleText(false); // False means use smooth scrolling while audio plays
     
-    keepActiveWordInViewport();
-    
     // NEW: Update the clock string dynamically
     if (timeDisplay) {
       timeDisplay.textContent = `${formatTime(audio.currentTime)} / ${formatTime(audio.duration)}`;
@@ -287,33 +285,6 @@ document.addEventListener("DOMContentLoaded", () => {
       popupOverlay.style.display = "block";
     });
   });
-
-  //makes sure long sentences can be read without manual scrolling
-  function keepActiveWordInViewport() {
-      // 1. Find the currently active word span inside your highlighted phrase
-      // (Adjust the selector '.word.active' to match your CSS highlight class)
-      const activeWord = document.querySelector('.word.active');
-      
-      if (!activeWord) return;
-  
-      // 2. Get the bounding box positions of the word and the screen
-      const wordRect = activeWord.getBoundingClientRect();
-      const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
-  
-      // Buffer space (in pixels) so the text isn't crammed right against the edge
-      const bottomBuffer = 40; 
-  
-      // 3. Check if the active word has overflowed past the bottom of the screen
-      if (wordRect.bottom > (viewportHeight - bottomBuffer)) {
-          // Calculate exactly how many pixels we need to scroll down to reveal this word
-          const overflowOffset = wordRect.bottom - viewportHeight + bottomBuffer;
-          
-          window.scrollBy({
-              top: overflowOffset,
-              behavior: 'smooth' // Smooth scrolling keeps the visual flow natural
-          });
-      }
-  }
   
   // ==========================================
   // RESILIENT PROGRESS AND METADATA RESTORATION

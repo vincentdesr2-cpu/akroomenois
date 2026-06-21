@@ -43,7 +43,6 @@ body {
   word-break: break-word;
   hyphens: auto;
   text-wrap: pretty;
-	width: 100%;
 }
 
 #text_en {
@@ -56,7 +55,6 @@ body {
   word-break: break-word;
   hyphens: auto;
   text-wrap: pretty;
-  width: 100%;
 }
 
 #tiny_text {
@@ -66,38 +64,28 @@ body {
   text-align: center;
 }
 
-/* Default state: Greek is visible, English is physically there but invisible */
+/* Plane 1: Greek Mode */
 body:not(.english-mode) #text {
-  visibility: visible;
   opacity: 1;
-  position: relative;
   pointer-events: auto;
+  z-index: 2; /* Bring to front */
 }
-
 body:not(.english-mode) #text_en {
-  visibility: hidden;
   opacity: 0;
-  position: absolute; /* Takes up 0px of visual space, but preserves structural height calculations */
-  top: 120px;         /* Matches your body padding-top */
-  left: 80px;         /* Matches your body padding-left */
-  pointer-events: none;
+  pointer-events: none; /* Click-through mode */
+  z-index: 1; /* Send to back */
 }
 
-/* English mode state: English is visible, Greek is physically there but invisible */
+/* Plane 2: English Mode */
 body.english-mode #text {
-  visibility: hidden;
   opacity: 0;
-  position: absolute;
-  top: 120px;
-  left: 80px;
   pointer-events: none;
+  z-index: 1;
 }
-
 body.english-mode #text_en {
-  visibility: visible;
   opacity: 1;
-  position: relative;
   pointer-events: auto;
+  z-index: 2;
 }
 
 span {

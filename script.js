@@ -629,14 +629,17 @@ document.addEventListener("DOMContentLoaded", () => {
   fontControl.addEventListener("input", () => {
     const size = fontControl.value + "px";
     
-    // Update the Greek text size
     if (text) text.style.fontSize = size;
-    
-    // Update the English text size simultaneously!
     if (textEn) textEn.style.fontSize = size;
     
     fontValue.textContent = size;
-    localStorage.setItem("reader_fontSize", fontControl.value); // Save preference
+    localStorage.setItem("reader_fontSize", fontControl.value);
+  
+    const activePhrase = document.querySelector(".phrase_en.active");
+    if (activePhrase) {
+      const linesCount = getLineCount(activePhrase);
+      console.log(`The active paragraph is taking up exactly ${linesCount} lines right now.`);
+    }
   });
 
   // Font Family Operational Event Listener

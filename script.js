@@ -581,73 +581,78 @@ document.addEventListener("DOMContentLoaded", () => {
   langBtn.addEventListener("click", () => {
     let activePhraseIndex = -1;
     let relativeWordProgress = 0.5; // Default to paragraph middle if no word is highlighted
-    let originalGreekWordViewportTop = 0;
+    let greekWordCenterPageY = 0;
 
-    // 1. Find our active phrase and word before altering any visibility layouts
-    const activeWord = document.querySelector("#text span.word.active");
-    const activeGreekPhrase = currentActive || (activeWord ? activeWord.closest("span.phrase") : null);
+    // Identify current direction
+    const turningToEnglish = (langBtn.textContent === "GR");
 
-    if (activeGreekPhrase) {
-      const phrasesArray = Array.from(phrases);
-      activePhraseIndex = phrasesArray.indexOf(activeGreekPhrase);
+    // 1. Find our active source paragraph based on current active language state
+    const currentActiveWord = document.querySelector(".word.active");
+    const sourcePhrase = currentActive || (currentActiveWord ? currentActiveWord.closest("span.phrase, span.phrase_en") : null);
 
-      // --- STEP 1: Find height of the Greek paragraph ---
-      const greekPhraseRect = activeGreekPhrase.getBoundingClientRect();
-      const greekPhraseHeight = greekPhraseRect.height;
-      const greekPhraseViewportTop = greekPhraseRect.top;
+    if (sourcePhrase) {
+      // Find the index of the source phrase
+      const sourcePhrasesArray = Array.from(turningToEnglish ? phrases : phrasesEn);
+      activePhraseIndex = sourcePhrasesArray.indexOf(sourcePhrase);
 
-      if (activeWord) {
-        // --- STEP 2: Find middle point of the Greek active word ---
-        const wordRect = activeWord.getBoundingClientRect();
-        originalGreekWordViewportTop = wordRect.top + (wordRect.height / 2);
+      // --- STEP 1: Find height and boundaries of the active paragraph ---
+      const sourcePhraseRect = sourcePhrase.getBoundingClientRect();
+      const sourcePhraseTopPageY = window.scrollY + sourcePhraseRect.top;
+      const sourcePhraseHeight = sourcePhraseRect.height;
 
-        // --- STEP 3: Make a percentage based on the position of the word within the paragraph ---
-        relativeWordProgress = (originalGreekWordViewportTop - greekPhraseViewportTop) / greekPhraseHeight;
+      // --- STEP 2: Find middle point of the active word (or fallback to phrase center) ---
+      if (currentActiveWord) {
+        const wordRect = currentActiveWord.getBoundingClientRect();
+        greekWordCenterPageY = window.scrollY + wordRect.top + (wordRect.height / 2);
       } else {
-        originalGreekWordViewportTop = greekPhraseViewportTop + (greekPhraseHeight / 2);
-        relativeWordProgress = 0.5;
+        greekWordCenterPageY = sourcePhraseTopPageY + (sourcePhraseHeight / 2);
       }
+
+      // --- STEP 3: Make a percentage based on the position of the word within the paragraph ---
+      relativeWordProgress = (greekWordCenterPageY - sourcePhraseTopPageY) / sourcePhraseHeight;
     }
 
-    // Clear active layout visibility tags safely
+    // Clear old visual highlights safely
     if (currentActive) currentActive.classList.remove("active");
     phrases.forEach(p => p.classList.remove("active"));
     phrasesEn.forEach(p => p.classList.remove("active"));
 
-    // --- STEP 4: Switch to English / Greek layout views ---
-    const turningToEnglish = (langBtn.textContent === "GR");
+    // --- STEP 4: Switch UI indicators and add the state class to the document body ---
     if (turningToEnglish) {
       langBtn.textContent = "EN";
-      text.style.display = "none";
-      textEn.style.display = "block";
+      document.body.classList.add("english-mode");
     } else {
       langBtn.textContent = "GR";
-      text.style.display = "block";
-      textEn.style.display = "none";
+      document.body.classList.remove("english-mode");
     }
 
-    // Refresh application styling highlights
+    // Remove old hard-coded inline display values so they don't block our CSS rules
+    text.style.display = "";
+    textEn.style.display = "";
+
+    // Target the corresponding destination paragraph
     if (activePhraseIndex !== -1) {
       currentActive = turningToEnglish ? phrasesEn[activePhraseIndex] : phrases[activePhraseIndex];
       if (currentActive) currentActive.classList.add("active");
     }
 
-    // --- STEP 5 & 6: Measure target paragraph height and scroll exact pixel difference ---
+    // Run layout highlight sync checks
+    syncVisibleText(false);
+
+    // --- STEP 5: Find matching paragraph and use the percentage to calculate the target position ---
     if (activePhraseIndex !== -1 && currentActive) {
-      // Find height and window position of the matching target paragraph
       const targetPhraseRect = currentActive.getBoundingClientRect();
+      const targetPhraseTopPageY = window.scrollY + targetPhraseRect.top;
       const targetPhraseHeight = targetPhraseRect.height;
-      const targetPhraseViewportTop = targetPhraseRect.top;
 
-      // Use the saved percentage to pinpoint the target line inside the new container
-      const targetEnglishLineViewportTop = targetPhraseViewportTop + (targetPhraseHeight * relativeWordProgress);
+      const targetLinePageY = targetPhraseTopPageY + (targetPhraseHeight * relativeWordProgress);
 
-      // --- STEP 6: Scroll by the exact pixel coordinate gap ---
-      const scrollDifference = targetEnglishLineViewportTop - originalGreekWordViewportTop;
-
-      window.scrollBy({
-        top: scrollDifference,
-        behavior: "auto" // Instant jump with zero animation layout delay
+      // --- STEP 6: Calculate difference and scroll exactly that number of pixels ---
+      const scrollDifference = targetLinePageY - greekWordCenterPageY;
+      
+      window.scrollTo({
+        top: window.scrollY + scrollDifference,
+        behavior: "auto" // Clean instant visual swap jump
       });
     }
   });

@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ==========================================
   const interfaceHTML = `
     <div id="topBar">
-      <button id="homeBtn">🏠</button>
+      <button id="homeBtn">🏠🏠</button>
       <div id="title">${document.title}</div> <button id="settingsBtn">⚙️</button>
     </div>
 
@@ -538,15 +538,82 @@ document.addEventListener("DOMContentLoaded", () => {
     if (index > 0) audio.currentTime = parseFloat(phrases[index - 1].dataset.start);
   });
 
-  langBtn.addEventListener("click", () => {
+  //langBtn.addEventListener("click", () => {
     // 1. Completely clear out old highlights across both languages
+    //if (currentActive) currentActive.classList.remove("active");
+    //phrases.forEach(p => p.classList.remove("active"));
+    //phrasesEn.forEach(p => p.classList.remove("active"));
+    //currentActive = null; 
+
+    // 2. Toggle the visibility layouts
+    //if (langBtn.textContent === "GR") {
+      //langBtn.textContent = "EN";
+      //text.style.display = "none";
+      //textEn.style.display = "block";
+    //} else {
+      //langBtn.textContent = "GR";
+      //text.style.display = "block";
+      //textEn.style.display = "none";
+    //}
+
+    // 3. Force an instantaneous view alignment and re-highlight, even if paused!
+    //syncVisibleText(true); 
+    
+    // 4. EXCEPTION: When RETURNING to Greek, find the first phrase of the current section
+    //if (langBtn.textContent === "GR" && currentActive) {
+      //const currentSecNum = currentActive.dataset.section;
+      
+      //if (currentSecNum) {
+        // Find the absolute first Greek phrase assigned to this data-section
+        //const firstPhraseOfSection = Array.from(phrases).find(p => p.dataset.section === currentSecNum);
+        
+        //if (firstPhraseOfSection) {
+          //jumpToTop(firstPhraseOfSection); // Snap the paragraph beginning to the top line!
+        //} else {
+          //jumpToTop(currentActive); // Fallback safety snap
+        //}
+      //} else {
+        //jumpToTop(currentActive); // Fallback if no section data exists (like the title)
+      //}
+    //}
+  //});
+
+  langBtn.addEventListener("click", () => {
+    // 1. Capture the exact screen position of the active Greek line BEFORE toggling layouts
+    let screenVisualOffset = 120; // Default fallback to topBar padding offset
+    let relativeWordProgress = 0; // Where the active line is proportionally inside its phrase
+    let activePhraseIndex = -1;
+
+    const activeWord = document.querySelector("#text span.word.active");
+    const activeGreekPhrase = currentActive || (activeWord ? activeWord.closest("span.phrase") : null);
+
+    if (activeGreekPhrase) {
+      const phrasesArray = Array.from(phrases);
+      activePhraseIndex = phrasesArray.indexOf(activeGreekPhrase);
+
+      // If a word is active, calculate its exact pixel coordinates relative to the viewport window
+      if (activeWord) {
+        const wordRect = activeWord.getBoundingClientRect();
+        screenVisualOffset = wordRect.top; // Exact pixel position on user's monitor screen
+
+        const phraseRect = activeGreekPhrase.getBoundingClientRect();
+        relativeWordProgress = (wordRect.top - phraseRect.top) / phraseRect.height;
+      } else {
+        // Fallback if just a phrase is active but no specific word timing is playing
+        const phraseRect = activeGreekPhrase.getBoundingClientRect();
+        screenVisualOffset = phraseRect.top;
+      }
+    }
+
+    // 2. Clear out old highlights
     if (currentActive) currentActive.classList.remove("active");
     phrases.forEach(p => p.classList.remove("active"));
     phrasesEn.forEach(p => p.classList.remove("active"));
     currentActive = null; 
 
-    // 2. Toggle the visibility layouts
-    if (langBtn.textContent === "GR") {
+    // 3. Toggle the layout visibility strings
+    const turningToEnglish = (langBtn.textContent === "GR");
+    if (turningToEnglish) {
       langBtn.textContent = "EN";
       text.style.display = "none";
       textEn.style.display = "block";
@@ -556,24 +623,30 @@ document.addEventListener("DOMContentLoaded", () => {
       textEn.style.display = "none";
     }
 
-    // 3. Force an instantaneous view alignment and re-highlight, even if paused!
-    syncVisibleText(true); 
-    
-    // 4. EXCEPTION: When RETURNING to Greek, find the first phrase of the current section
-    if (langBtn.textContent === "GR" && currentActive) {
-      const currentSecNum = currentActive.dataset.section;
-      
-      if (currentSecNum) {
-        // Find the absolute first Greek phrase assigned to this data-section
-        const firstPhraseOfSection = Array.from(phrases).find(p => p.dataset.section === currentSecNum);
+    // 4. Update the highlights for the new active layout
+    syncVisibleText(false); // Run your framework layout highlighting without its default scrolling trigger
+
+    // 5. CALCULATE AND EXECUTE PERFECT ALIGNMENT SCROLL
+    if (activePhraseIndex !== -1) {
+      const targetPhrasesList = turningToEnglish ? phrasesEn : phrases;
+      const targetPhrase = targetPhrasesList[activePhraseIndex];
+
+      if (targetPhrase) {
+        // Find the absolute document Y coordinate of the phrase top
+        const phraseAbsoluteTop = window.scrollY + targetPhrase.getBoundingClientRect().top;
         
-        if (firstPhraseOfSection) {
-          jumpToTop(firstPhraseOfSection); // Snap the paragraph beginning to the top line!
-        } else {
-          jumpToTop(currentActive); // Fallback safety snap
-        }
-      } else {
-        jumpToTop(currentActive); // Fallback if no section data exists (like the title)
+        // Estimate the height offset for our target line using the progress ratio captured from the previous view
+        const phraseTotalHeight = targetPhrase.getBoundingClientRect().height;
+        const lineOffsetWithinPhrase = phraseTotalHeight * relativeWordProgress;
+
+        // Calculate the perfect scroll position: Absolute Line Position - Saved Screen Screen Level
+        const finalScrollTarget = (phraseAbsoluteTop + lineOffsetWithinPhrase) - screenVisualOffset;
+
+        // Instantly snap the window scroll so the text line appears at the exact same screen height
+        window.scrollTo({
+          top: finalScrollTarget,
+          behavior: "auto" // Immediate snap to prevent text shifting visible lag
+        });
       }
     }
   });

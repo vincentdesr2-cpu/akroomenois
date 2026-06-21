@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ==========================================
   const interfaceHTML = `
     <div id="topBar">
-      <button id="homeBtn">🏠</button>
+      <button id="homeBtn">🏠🏠</button>
       <div id="title">${document.title}</div> <button id="settingsBtn">⚙️</button>
     </div>
 
@@ -88,10 +88,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const fontFamilyControl = document.getElementById("fontFamilyControl");
   const timeDisplay = document.getElementById("timeDisplay");
   const notes = document.querySelectorAll(".note-marker");
+  const speakBtn = document.getElementById("dictSpeakBtn");
 
   let wasPlaying = false;
   let currentActive = null;
   let currentSection = null;
+  let dictAudioInstance = null;
 
   // ==========================================
   // SETUP CONFIG BOUNDARIES & LOAD SAVED PREFERENCES
@@ -347,6 +349,49 @@ document.addEventListener("DOMContentLoaded", () => {
       popupOverlay.style.display = "block";
     });
   });
+
+  function setupDictionaryAudioButton() {
+    if (!speakBtn) return;
+
+    speakBtn.addEventListener("click", () => {
+      // If a word is already playing, stop it first
+      if (dictAudioInstance) {
+        dictAudioInstance.pause();
+        dictAudioInstance = null;
+      }
+
+      const start = parseFloat(speakBtn.dataset.start);
+      const end = parseFloat(speakBtn.dataset.end);
+
+      if (isNaN(start) || isNaN(end) || start === 0) return;
+
+      // Find the active audio file source matching the main player layout
+      const mainAudioSource = audio.querySelector("source");
+      const audioUrl = mainAudioSource ? mainAudioSource.src : audio.src;
+
+      if (!audioUrl) return;
+
+      // Spin up an entirely separate audio node in the background DOM
+      dictAudioInstance = new Audio(audioUrl);
+      
+      // Inherit the same playback rate preference selected by the user in settings!
+      if (speedControl) {
+        dictAudioInstance.playbackRate = parseFloat(speedControl.value);
+      }
+
+      // Force jump directly to the beginning of the word pronunciation
+      dictAudioInstance.currentTime = start;
+      dictAudioInstance.play();
+
+      // Monitor timeline updates only for this temporary background stream
+      dictAudioInstance.addEventListener("timeupdate", () => {
+        if (dictAudioInstance && dictAudioInstance.currentTime >= end) {
+          dictAudioInstance.pause();
+          dictAudioInstance = null;
+        }
+      });
+    });
+  }
   
   // ==========================================
   // RESILIENT PROGRESS AND METADATA RESTORATION
@@ -395,10 +440,12 @@ document.addEventListener("DOMContentLoaded", () => {
         
         const wordText = word.textContent;
         fetch(`https://scaife.perseus.org/morpheus/?word=${encodeURIComponent(wordText)}&lang=grc`);
-        
-        popupContent.innerHTML = `<p><strong>Word:</strong> ${word.textContent}<br><br><strong>Lemma:</strong><br><br><strong>Word Type:</strong><br><br><strong>Grammar:</strong></p>`;
+        const start = word.dataset.wordStart || "0";
+        const end = word.dataset.wordEnd || "0";
+        popupContent.innerHTML = `<p><strong>Word:</strong> ${word.textContent} <button id="dictSpeakBtn" data-start="${start}" data-end="${end}" style= cursor: pointer;">🔊</button><br><br><strong>Lemma:</strong><br><br><strong>Word Type:</strong><br><br><strong>Grammar:</strong></p>`;
         popup.style.display = "block";
         popupOverlay.style.display = "block";
+        setupDictionaryAudioButton();
       } else if (phrase) {
         audio.currentTime = parseFloat(phrase.dataset.start);
       }

@@ -189,10 +189,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
     // If the word drops below the screen limits, put it cleanly at the top line instead!
     if (wordRect.bottom > (viewportHeight - bottomBuffer)) {
-      window.scrollTo({
-        top: window.scrollY + wordRect.top - 120, // Puts it at the exact same top margin as your phrase headers
-        behavior: "smooth"
-      });
+    scrollToTop(activeWord);
     }
   }
   

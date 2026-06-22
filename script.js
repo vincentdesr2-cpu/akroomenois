@@ -333,12 +333,12 @@ document.addEventListener("DOMContentLoaded", () => {
       noteContent = noteContent.replace(urlRegex, (url) => {
         // Fix URLs missing the protocol prefix so they link externally correctly
         const hyperLink = url.startsWith("http") ? url : `https://${url}`;
-        return `<a href="${hyperLink}" target="_blank" style="color: #007bff; text-align: justify; text-decoration: underline; break-all: break-word;">${url}</a>`;
+        return `<a href="${hyperLink}" target="_blank" style="color: #007bff; text-decoration: underline; break-all: break-word;">${url}</a>`;
       });
 
       // Inject the processed text safely into your popup window
       popupContent.innerHTML = `
-        <div style="font-family: inherit; font-size: 0.9em; padding: 10px; line-height: 1.5;">
+        <div style="font-family: inherit; text-align: justify; font-size: 0.9em; padding: 10px; line-height: 1.5;">
           <h3 style="margin-top: 0; color: #a52a2a;">Note</h3>
           <p>${noteContent}</p>
         </div>

@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ==========================================
   const interfaceHTML = `
     <div id="topBar">
-      <button id="homeBtn">🏠</button>
+      <button id="homeBtn">🏠🏠</button>
       <div id="title">${document.title}</div> <button id="settingsBtn">⚙️</button>
     </div>
 
@@ -540,22 +540,22 @@ document.addEventListener("DOMContentLoaded", () => {
     syncVisibleText(true); 
     
     // 4. EXCEPTION: When RETURNING to Greek, find the first phrase of the current section
-    //if (langBtn.textContent === "GR" && currentActive) {
-      //const currentSecNum = currentActive.dataset.section;
+    if (langBtn.textContent === "GR" && currentActive) {
+      const currentSecNum = currentActive.dataset.section;
       
-      //if (currentSecNum) {
+      if (currentSecNum) {
         // Find the absolute first Greek phrase assigned to this data-section
-        //const firstPhraseOfSection = Array.from(phrases).find(p => p.dataset.section === currentSecNum);
+        const firstPhraseOfSection = Array.from(phrases).find(p => p.dataset.section === currentSecNum);
         
-        //if (firstPhraseOfSection) {
-          //jumpToTop(firstPhraseOfSection); // Snap the paragraph beginning to the top line!
-        //} else {
-          //jumpToTop(currentActive); // Fallback safety snap
-        //}
-      //} else {
-        //jumpToTop(currentActive); // Fallback if no section data exists (like the title)
-      //}
-    //}
+        if (firstPhraseOfSection) {
+          jumpToTop(firstPhraseOfSection); // Snap the paragraph beginning to the top line!
+        } else {
+          jumpToTop(currentActive); // Fallback safety snap
+        }
+      } else {
+        jumpToTop(currentActive); // Fallback if no section data exists (like the title)
+      }
+    }
   });
   
   // Keyboard Navigation Bindings

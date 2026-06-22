@@ -222,3 +222,18 @@ span {
   font-size: 20px;
   cursor: pointer;
 }
+
+
+====================
+==DARK MODE
+====================
+
+@media (prefers-color-scheme: dark) {
+  #playerBar {
+    background: #222;
+    color: white;
+  }
+}
+
+
+

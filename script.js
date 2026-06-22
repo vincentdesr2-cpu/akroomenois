@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ==========================================
   const interfaceHTML = `
     <div id="topBar">
-      <button id="homeBtn">🏠🏠</button>
+      <button id="homeBtn">🏠</button>
       <div id="title">${document.title}</div> <button id="settingsBtn">⚙️</button>
     </div>
 
@@ -580,42 +580,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
   langBtn.addEventListener("click", () => {
     let activePhraseIndex = -1;
-    let relativeWordProgress = 0.5; // Default middle fallback
-    let sourceWordCenterPageY = 0;
 
+    // Identify current language direction before the toggle
     const turningToEnglish = (langBtn.textContent === "GR");
 
-    // Identify active reading tokens on the current plane before toggling layout states
     const currentActiveWord = document.querySelector(".word.active");
     const sourcePhrase = currentActive || (currentActiveWord ? currentActiveWord.closest("span.phrase, span.phrase_en") : null);
 
     if (sourcePhrase) {
       const sourcePhrasesArray = Array.from(turningToEnglish ? phrases : phrasesEn);
       activePhraseIndex = sourcePhrasesArray.indexOf(sourcePhrase);
-
-      // --- STEP 1: Find height and page top of the active paragraph ---
-      const sourcePhraseRect = sourcePhrase.getBoundingClientRect();
-      const sourcePhraseTopPageY = window.scrollY + sourcePhraseRect.top;
-      const sourcePhraseHeight = sourcePhraseRect.height;
-
-      // --- STEP 2: Find absolute middle point of the active word ---
-      if (currentActiveWord) {
-        const wordRect = currentActiveWord.getBoundingClientRect();
-        sourceWordCenterPageY = window.scrollY + wordRect.top + (wordRect.height / 2);
-      } else {
-        sourceWordCenterPageY = sourcePhraseTopPageY + (sourcePhraseHeight / 2);
-      }
-
-      // --- STEP 3: Make a percentage based on the position of the word within the paragraph ---
-      relativeWordProgress = (sourceWordCenterPageY - sourcePhraseTopPageY) / sourcePhraseHeight;
     }
 
-    // Clear old focus indicators safely
+    // Clear previous visual focus highlights safely
     if (currentActive) currentActive.classList.remove("active");
     phrases.forEach(p => p.classList.remove("active"));
     phrasesEn.forEach(p => p.classList.remove("active"));
 
-    // --- STEP 4: Switch visibility planes via body class assignment ---
+    // --- TOGGLE VISIBILITY VIA CSS CLASS ONLY ---
     if (turningToEnglish) {
       langBtn.textContent = "EN";
       document.body.classList.add("english-mode");
@@ -624,36 +606,18 @@ document.addEventListener("DOMContentLoaded", () => {
       document.body.classList.remove("english-mode");
     }
 
-    // Ensure hardcoded display modifiers are removed entirely
+    // Clear out any old hardcoded inline display values if present
     text.style.display = "";
     textEn.style.display = "";
 
-    // Set highlights onto the destination track phrase
+    // Set highlights onto the matching counterpart paragraph
     if (activePhraseIndex !== -1) {
       currentActive = turningToEnglish ? phrasesEn[activePhraseIndex] : phrases[activePhraseIndex];
       if (currentActive) currentActive.classList.add("active");
     }
 
-    // Update highlights safely without timeline auto-scroll fires
+    // Sync audio tracking highlight state cleanly without triggering an auto-scroll
     syncVisibleText(false);
-
-    // --- STEP 5 & 6: Measure destination layout tracks and run final delta scroll adjustment ---
-    if (activePhraseIndex !== -1 && currentActive) {
-      const targetPhraseRect = currentActive.getBoundingClientRect();
-      const targetPhraseTopPageY = window.scrollY + targetPhraseRect.top;
-      const targetPhraseHeight = targetPhraseRect.height;
-
-      // Calculate where the target line sits inside the newly visible block
-      const targetLinePageY = targetPhraseTopPageY + (targetPhraseHeight * relativeWordProgress);
-
-      // --- STEP 6: Scroll by the exact pixel delta difference ---
-      const scrollDifference = targetLinePageY - sourceWordCenterPageY;
-      
-      window.scrollTo({
-        top: window.scrollY + scrollDifference,
-        behavior: "auto" // Instant canvas jump frame
-      });
-    }
   });
   
   // Keyboard Navigation Bindings

@@ -407,17 +407,20 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 
-  // --- THEME TOGGLE ACCESSIBILITY CONTROL ---
+ // --- TEST MANUALLY DRIVEN DARK MODE TOGGLE ---
   if (localStorage.getItem("theme") === "dark") {
     document.body.classList.add("dark-mode");
     if (themeToggleBtn) themeToggleBtn.textContent = "Toggle Light Mode ☀️";
+  } else {
+    document.body.classList.remove("dark-mode");
+    if (themeToggleBtn) themeToggleBtn.textContent = "Toggle Dark Mode 🌙";
   }
 
   if (themeToggleBtn) {
     themeToggleBtn.addEventListener("click", () => {
-      const isDark = document.body.classList.toggle("dark-mode");
+      const isDarkNow = document.body.classList.toggle("dark-mode");
       
-      if (isDark) {
+      if (isDarkNow) {
         themeToggleBtn.textContent = "Toggle Light Mode ☀️";
         localStorage.setItem("theme", "dark");
       } else {
@@ -426,8 +429,8 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
-  
-  // ==========================================
+
+==========================================
   // RESILIENT PROGRESS AND METADATA RESTORATION
   // ==========================================
 

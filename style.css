@@ -235,5 +235,9 @@ span {
   }
 }
 
-
+@media (prefers-color-scheme: dark) {
+  .phrase.active {
+    background-color: #a8fff1
+  }
+}
 

@@ -398,27 +398,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  function getLineCount(element) {
-    if (!element) return 0;
   
-    // 1. Get the exact rendered height of the paragraph (in pixels)
-    const elementHeight = element.offsetHeight;
-  
-    // 2. Compute the exact line-height the browser is currently applying
-    const computedStyle = window.getComputedStyle(element);
-    let lineHeight = parseFloat(computedStyle.lineHeight);
-  
-    // Fallback safety: If line-height is set to "normal", 
-    // browsers approximate it to ~1.2 times the current font size.
-    if (isNaN(lineHeight)) {
-      const fontSize = parseFloat(computedStyle.fontSize);
-      lineHeight = fontSize * 1.2; 
-    }
-  
-    // 3. Divide the total height by the height of one line
-    return Math.round(elementHeight / lineHeight);
-  }
-    
   // ==========================================
   // RESILIENT PROGRESS AND METADATA RESTORATION
   // ==========================================
@@ -538,53 +518,43 @@ document.addEventListener("DOMContentLoaded", () => {
     if (index > 0) audio.currentTime = parseFloat(phrases[index - 1].dataset.start);
   });
 
-  //langBtn.addEventListener("click", () => {
+  langBtn.addEventListener("click", () => {
     // 1. Completely clear out old highlights across both languages
-    //if (currentActive) currentActive.classList.remove("active");
-    //phrases.forEach(p => p.classList.remove("active"));
-    //phrasesEn.forEach(p => p.classList.remove("active"));
-    //currentActive = null; 
+    if (currentActive) currentActive.classList.remove("active");
+    phrases.forEach(p => p.classList.remove("active"));
+    phrasesEn.forEach(p => p.classList.remove("active"));
+    currentActive = null; 
 
     // 2. Toggle the visibility layouts
-    //if (langBtn.textContent === "GR") {
-      //langBtn.textContent = "EN";
-      //text.style.display = "none";
-      //textEn.style.display = "block";
-    //} else {
-      //langBtn.textContent = "GR";
-      //text.style.display = "block";
-      //textEn.style.display = "none";
-    //}
-
-    // 3. Force an instantaneous view alignment and re-highlight, even if paused!
-    //syncVisibleText(true); 
-    
-    // 4. EXCEPTION: When RETURNING to Greek, find the first phrase of the current section
-    //if (langBtn.textContent === "GR" && currentActive) {
-      //const currentSecNum = currentActive.dataset.section;
-      
-      //if (currentSecNum) {
-        // Find the absolute first Greek phrase assigned to this data-section
-        //const firstPhraseOfSection = Array.from(phrases).find(p => p.dataset.section === currentSecNum);
-        
-        //if (firstPhraseOfSection) {
-          //jumpToTop(firstPhraseOfSection); // Snap the paragraph beginning to the top line!
-        //} else {
-          //jumpToTop(currentActive); // Fallback safety snap
-        //}
-      //} else {
-        //jumpToTop(currentActive); // Fallback if no section data exists (like the title)
-      //}
-    //}
-  //});
-
-  langBtn.addEventListener("click", () => {
     if (langBtn.textContent === "GR") {
       langBtn.textContent = "EN";
-      document.body.classList.add("english-mode");
+      text.style.display = "none";
+      textEn.style.display = "block";
     } else {
       langBtn.textContent = "GR";
-      document.body.classList.remove("english-mode");
+      text.style.display = "block";
+      textEn.style.display = "none";
+    }
+
+    // 3. Force an instantaneous view alignment and re-highlight, even if paused!
+    syncVisibleText(true); 
+    
+    // 4. EXCEPTION: When RETURNING to Greek, find the first phrase of the current section
+    if (langBtn.textContent === "GR" && currentActive) {
+      const currentSecNum = currentActive.dataset.section;
+      
+      if (currentSecNum) {
+        // Find the absolute first Greek phrase assigned to this data-section
+        const firstPhraseOfSection = Array.from(phrases).find(p => p.dataset.section === currentSecNum);
+        
+        if (firstPhraseOfSection) {
+          jumpToTop(firstPhraseOfSection); // Snap the paragraph beginning to the top line!
+        } else {
+          jumpToTop(currentActive); // Fallback safety snap
+        }
+      } else {
+        jumpToTop(currentActive); // Fallback if no section data exists (like the title)
+      }
     }
   });
   

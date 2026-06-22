@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ==========================================
   const interfaceHTML = `
     <div id="topBar">
-      <button id="homeBtn">🏠🏠</button>
+      <button id="homeBtn">🏠</button>
       <div id="title">${document.title}</div> <button id="settingsBtn">⚙️</button>
     </div>
 
@@ -157,7 +157,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Viewport checking functions for autoscroll
   function isOutOfView(el) {
     const rect = el.getBoundingClientRect();
-    const topOffset = 120;   
+    const topOffset = 60;   
     const bottomOffset = window.innerHeight - 100; 
     return rect.top < topOffset + 40 || rect.bottom > bottomOffset - 40;
   }

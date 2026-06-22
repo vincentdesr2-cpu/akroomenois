@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ==========================================
   const interfaceHTML = `
     <div id="topBar">
-      <button id="homeBtn">🏠</button>
+      <button id="homeBtn">🏠🏠</button>
       <div id="title">${document.title}</div> <button id="settingsBtn">⚙️</button>
     </div>
 
@@ -30,6 +30,12 @@ document.addEventListener("DOMContentLoaded", () => {
     <div id="settingsPopup">
       <button id="closeSettings">✕</button>
       <h3>Settings</h3>
+      <label>Interface Theme: 
+        <button id="themeToggleBtn" style="padding: 5px 10px; margin-left: 10px; cursor: pointer; border-radius: 4px; border: 1px solid #ccc; background: #fff; color: #000;">
+          Toggle Dark Mode 🌙
+        </button>
+      </label>
+      <br><br>
       <label>Greek Font: 
         <select id="fontFamilyControl">
           <option value="'SBL'">SBL</option>
@@ -89,6 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const fontFamilyControl = document.getElementById("fontFamilyControl");
   const timeDisplay = document.getElementById("timeDisplay");
   const notes = document.querySelectorAll(".note-marker");
+  const themeToggleBtn = document.getElementById("themeToggleBtn");
 
   let wasPlaying = false;
   let currentActive = null;
@@ -399,6 +406,26 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+
+  // --- THEME TOGGLE ACCESSIBILITY CONTROL ---
+  if (localStorage.getItem("theme") === "dark") {
+    document.body.classList.add("dark-mode");
+    if (themeToggleBtn) themeToggleBtn.textContent = "Toggle Light Mode ☀️";
+  }
+
+  if (themeToggleBtn) {
+    themeToggleBtn.addEventListener("click", () => {
+      const isDark = document.body.classList.toggle("dark-mode");
+      
+      if (isDark) {
+        themeToggleBtn.textContent = "Toggle Light Mode ☀️";
+        localStorage.setItem("theme", "dark");
+      } else {
+        themeToggleBtn.textContent = "Toggle Dark Mode 🌙";
+        localStorage.setItem("theme", "light");
+      }
+    });
+  }
   
   // ==========================================
   // RESILIENT PROGRESS AND METADATA RESTORATION

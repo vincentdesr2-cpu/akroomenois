@@ -430,7 +430,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-==========================================
+//==========================================
   // RESILIENT PROGRESS AND METADATA RESTORATION
   // ==========================================
 

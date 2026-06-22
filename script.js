@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ==========================================
   const interfaceHTML = `
     <div id="topBar">
-      <button id="homeBtn">🏠</button>
+      <button id="homeBtn">🏠🏠</button>
       <div id="title">${document.title}</div> <button id="settingsBtn">⚙️</button>
     </div>
 
@@ -164,7 +164,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function scrollToTop(el) {
   window.scrollTo({
-    top: window.scrollY + el.getBoundingClientRect().top - 120, 
+    top: window.scrollY + el.getBoundingClientRect().top - 60, 
     behavior: "smooth" 
   });
 
@@ -173,7 +173,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // instantaneous jumping
   function jumpToTop(el) {
   window.scrollTo({
-    top: window.scrollY + el.getBoundingClientRect().top - 120,
+    top: window.scrollY + el.getBoundingClientRect().top - 60,
     behavior: "auto" // "auto" means immediate snap, no smooth sliding
   });
 }

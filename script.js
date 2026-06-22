@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ==========================================
   const interfaceHTML = `
     <div id="topBar">
-      <button id="homeBtn">🏠</button>
+      <button id="homeBtn">🏠🏠</button>
       <div id="title">${document.title}</div> <button id="settingsBtn">⚙️</button>
     </div>
 
@@ -585,7 +585,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const turningToEnglish = (langBtn.textContent === "GR");
 
-    // Identify the active element on the current plane before toggling
+    // Identify active reading tokens on the current plane before toggling layout states
     const currentActiveWord = document.querySelector(".word.active");
     const sourcePhrase = currentActive || (currentActiveWord ? currentActiveWord.closest("span.phrase, span.phrase_en") : null);
 
@@ -610,12 +610,12 @@ document.addEventListener("DOMContentLoaded", () => {
       relativeWordProgress = (sourceWordCenterPageY - sourcePhraseTopPageY) / sourcePhraseHeight;
     }
 
-    // Clear previous visual focus tags safely
+    // Clear old focus indicators safely
     if (currentActive) currentActive.classList.remove("active");
     phrases.forEach(p => p.classList.remove("active"));
     phrasesEn.forEach(p => p.classList.remove("active"));
 
-    // --- STEP 4: Switch visibility planes by changing the body class ---
+    // --- STEP 4: Switch visibility planes via body class assignment ---
     if (turningToEnglish) {
       langBtn.textContent = "EN";
       document.body.classList.add("english-mode");
@@ -624,29 +624,34 @@ document.addEventListener("DOMContentLoaded", () => {
       document.body.classList.remove("english-mode");
     }
 
-    // Link target structural paragraph highlights
+    // Ensure hardcoded display modifiers are removed entirely
+    text.style.display = "";
+    textEn.style.display = "";
+
+    // Set highlights onto the destination track phrase
     if (activePhraseIndex !== -1) {
       currentActive = turningToEnglish ? phrasesEn[activePhraseIndex] : phrases[activePhraseIndex];
       if (currentActive) currentActive.classList.add("active");
     }
 
-    // Sync app interface text updates safely without auto-scroll interference
+    // Update highlights safely without timeline auto-scroll fires
     syncVisibleText(false);
 
-    // --- STEP 5: Find matching paragraph and calculate the precise target position ---
+    // --- STEP 5 & 6: Measure destination layout tracks and run final delta scroll adjustment ---
     if (activePhraseIndex !== -1 && currentActive) {
       const targetPhraseRect = currentActive.getBoundingClientRect();
       const targetPhraseTopPageY = window.scrollY + targetPhraseRect.top;
       const targetPhraseHeight = targetPhraseRect.height;
 
+      // Calculate where the target line sits inside the newly visible block
       const targetLinePageY = targetPhraseTopPageY + (targetPhraseHeight * relativeWordProgress);
 
-      // --- STEP 6: Calculate the exact difference and scroll by that number of pixels ---
+      // --- STEP 6: Scroll by the exact pixel delta difference ---
       const scrollDifference = targetLinePageY - sourceWordCenterPageY;
       
       window.scrollTo({
         top: window.scrollY + scrollDifference,
-        behavior: "auto" // Instant frame snap
+        behavior: "auto" // Instant canvas jump frame
       });
     }
   });

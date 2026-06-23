@@ -256,7 +256,7 @@ body.dark-mode #text_en span.phrase_en {
 
 body.dark-mode .phrase.active,
 body.dark-mode .phrase_en.active {
-  background-color: rgba(224, 110, 4, 0.35) !important; /* Soft version of your accent amber color */
+  background-color: rgba(224, 110, 4, 0.35) !important;
   color: #ffffff !important;
 }
 

@@ -407,28 +407,45 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 
- // --- TEST MANUALLY DRIVEN DARK MODE TOGGLE ---
-  if (localStorage.getItem("theme") === "dark") {
-    document.body.classList.add("dark-mode");
+ // --- AUTOMATIC SYSTEM SYNCED DARK MODE TOGGLE ---
+  const savedTheme = localStorage.getItem("theme");
+  
+  // Use the saved preference if it exists, otherwise check the device's system settings
+  if (savedTheme === "dark" || (!savedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+    document.documentElement.setAttribute("data-theme", "dark");
     if (themeToggleBtn) themeToggleBtn.textContent = "Toggle Light Mode ☀️";
   } else {
-    document.body.classList.remove("dark-mode");
+    document.documentElement.setAttribute("data-theme", "light");
     if (themeToggleBtn) themeToggleBtn.textContent = "Toggle Dark Mode 🌙";
   }
 
+  // Handle click events on your manual override toggle button
   if (themeToggleBtn) {
     themeToggleBtn.addEventListener("click", () => {
-      const isDarkNow = document.body.classList.toggle("dark-mode");
-      
-      if (isDarkNow) {
+      const currentTheme = document.documentElement.getAttribute("data-theme");
+      const targetTheme = currentTheme === "dark" ? "light" : "dark";
+
+      document.documentElement.setAttribute("data-theme", targetTheme);
+      localStorage.setItem("theme", targetTheme);
+
+      if (targetTheme === "dark") {
         themeToggleBtn.textContent = "Toggle Light Mode ☀️";
-        localStorage.setItem("theme", "dark");
       } else {
         themeToggleBtn.textContent = "Toggle Dark Mode 🌙";
-        localStorage.setItem("theme", "light");
       }
     });
   }
+
+  // Listen for device-level system changes in real-time (only updates if user hasn't explicitly overridden it)
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
+    if (!localStorage.getItem("theme")) {
+      const systemTheme = e.matches ? "dark" : "light";
+      document.documentElement.setAttribute("data-theme", systemTheme);
+      if (themeToggleBtn) {
+        themeToggleBtn.textContent = systemTheme === "dark" ? "Toggle Light Mode ☀️" : "Toggle Dark Mode 🌙";
+      }
+    }
+  });
 
 //==========================================
   // RESILIENT PROGRESS AND METADATA RESTORATION

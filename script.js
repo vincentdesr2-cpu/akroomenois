@@ -493,7 +493,6 @@ document.addEventListener("DOMContentLoaded", () => {
         audio.pause();
         
         const wordText = word.textContent;
-        fetch(`https://scaife.perseus.org/morpheus/?word=${encodeURIComponent(wordText)}&lang=grc`);
         const start = word.dataset.wordStart || "0";
         const end = word.dataset.wordEnd || "0";
         const hasValidTiming = (

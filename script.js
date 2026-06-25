@@ -104,7 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let currentActive = null;
   let currentSection = null;
   let dictAudioInstance = null;
-  let useGreekNumerals = false;
+  let useGreekNumerals = localStorage.getItem("reader_useGreekNumerals") === "true";
 
   // ==========================================
   // SETUP CONFIG BOUNDARIES & LOAD SAVED PREFERENCES
@@ -161,6 +161,11 @@ document.addEventListener("DOMContentLoaded", () => {
     audio.volume = parseFloat(savedVolume);
   }
 
+  // 5. Greek Numeral Time Display Preference
+  if (statusText) {
+    statusText.textContent = useGreekNumerals ? 'Greek' : 'Standard';
+  }
+  
   // Helper check for active popups
   function isPopupActive() {
     return (popup && popup.style.display === "block") || (settingsPopup && settingsPopup.style.display === "block");
@@ -291,6 +296,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   toggleBtn.addEventListener('click', () => {
     useGreekNumerals = !useGreekNumerals;
+
+    localStorage.setItem("reader_useGreekNumerals", useGreekNumerals);
     
     // Update button text indicator
     statusText.textContent = useGreekNumerals ? 'Greek' : 'Standard';

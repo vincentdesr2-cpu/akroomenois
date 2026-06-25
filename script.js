@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ==========================================
   const interfaceHTML = `
     <div id="topBar">
-      <button id="homeBtn">🏠</button>
+      <button id="homeBtn">🏠🏠</button>
       <div id="title">${document.title}</div> <button id="settingsBtn">⚙️</button>
     </div>
 
@@ -269,10 +269,10 @@ document.addEventListener("DOMContentLoaded", () => {
       
     let result = '';
       
-    // ALWAYS add a tens character to maintain 2-character spacing alignment
+    // 1. Always evaluate and append the tens place character
     result += tens[Math.floor(num / 10)];
-      
-    // Handle ones place (1, 2, 3...)
+    
+  // 2. Always evaluate and append the ones place character
     result += ones[num % 10];
       
     return result;

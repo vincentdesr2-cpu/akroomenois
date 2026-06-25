@@ -262,21 +262,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
   //Greek Numeral Timeline Track
   function convertToGreekNumerals(num) {
-    if (num === 0) return ' Ο'; // Fallback for 00 minutes/seconds
+    if (num === 0) return ' Ο'; // Fallback for 00 minutes/seconds
     
-    const tens = [' ', 'Ι', 'Κ', 'Λ', 'Μ', 'Ν', 'Ξ', 'Ο', 'Π', 'Ϙ'];
-    const ones = [' ', 'Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ϝ', 'Ζ', 'Η', 'Θ'];
-    
+    const tens = [' ', 'Ι', 'Κ', 'Λ', 'Μ', 'Ν', 'Ξ', 'Ο', 'Π', 'Ϙ'];
+    const ones = [' ', 'Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ϝ', 'Ζ', 'Η', 'Θ'];
+      
     let result = '';
-    
-    // Handle tens place (10, 20, 30...)
-    if (num >= 10) {
-      result += tens[Math.floor(num / 10)];
-    }
-    
+      
+    // ALWAYS add a tens character to maintain 2-character spacing alignment
+    result += tens[Math.floor(num / 10)];
+      
     // Handle ones place (1, 2, 3...)
     result += ones[num % 10];
-    
+      
     return result;
   }
   

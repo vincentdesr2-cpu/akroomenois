@@ -38,6 +38,10 @@ document.addEventListener("DOMContentLoaded", () => {
         </select>
       </label>
       <br><br>
+      <button id="toggle-greek-time" class="settings-btn">
+        Time Display: <span id="greek-time-status">Standard</span>
+      </button>
+      <br><br>
       <label>Text size: <input type="range" id="fontControl" step="1"><span id="fontValue"></span></label>
       <br><br>
       <label>Speed: <input type="range" id="speedControl" step="0.1"><span id="speedValue"></span></label>
@@ -90,11 +94,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const timeDisplay = document.getElementById("timeDisplay");
   const notes = document.querySelectorAll(".note-marker");
   const themeToggleBtn = document.getElementById("themeToggleBtn");
+  
+  const toggleBtn = document.getElementById('toggle-greek-time');
+  const statusText = document.getElementById('greek-time-status');
 
   let wasPlaying = false;
   let currentActive = null;
   let currentSection = null;
   let dictAudioInstance = null;
+  let useGreekNumerals = false;
 
   // ==========================================
   // SETUP CONFIG BOUNDARIES & LOAD SAVED PREFERENCES
@@ -249,7 +257,60 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
+
+  //Greek Numeral Timeline Track
+  function convertToGreekNumerals(num) {
+    if (num === 0) return 'ō'; // Fallback for 00 minutes/seconds
+    
+    const tens = ['', 'Ι', 'Κ', 'Λ', 'Μ', 'Ν', 'Ξ', 'Ο', 'Π', 'Ϙ'];
+    const ones = ['', 'Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ϛ', 'Ζ', 'Η', 'Θ'];
+    
+    let result = '';
+    
+    // Handle tens place (10, 20, 30...)
+    if (num >= 10) {
+      result += tens[Math.floor(num / 10)];
+    }
+    
+    // Handle ones place (1, 2, 3...)
+    result += ones[num % 10];
+    
+    return result;
+  }
   
+  // Example format helper for your time string (e.g., "08:53" -> "Η : ΝΓ")
+  function formatAudioTime(currentTime, useGreek) {
+    const minutes = Math.floor(currentTime / 60);
+    const seconds = Math.floor(currentTime % 60);
+    
+    if (useGreek) {
+      return `${convertToGreekNumerals(minutes)} : ${convertToGreekNumerals(seconds)}`;
+    } else {
+      // Standard padStart format: "08 : 53"
+      const displayMin = String(minutes).padStart(2, '0');
+      const displaySec = String(seconds).padStart(2, '0');
+      return `${displayMin} : ${displaySec}`;
+    }
+  }
+
+  toggleBtn.addEventListener('click', () => {
+  useGreekNumerals = !useGreekNumerals;
+  
+  // Update button text indicator
+  statusText.textContent = useGreekNumerals ? 'Greek' : 'Standard';
+  
+  // Force an immediate UI redraw if audio is paused/playing
+  if (audioElement) {
+    timeDisplay.textContent = formatAudioTime(audioElement.currentTime, useGreekNumerals);
+    }
+  });
+
+  // Inside your existing audio 'timeupdate' event listener, just swap to this:
+  audioElement.addEventListener('timeupdate', () => {
+    timeDisplay.textContent = formatAudioTime(audioElement.currentTime, useGreekNumerals);
+  });
+  
+  //End of Greek numeral Timeline Track
   // Universal Highlight & Timeline Track
   audio.addEventListener("timeupdate", () => {
     progressBar.value = audio.currentTime;
@@ -296,7 +357,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
     // Update the clock string dynamically
     if (timeDisplay) {
-      timeDisplay.textContent = `${formatTime(audio.currentTime)} / ${formatTime(audio.duration)}`;
+      timeDisplay.textContent = formatAudioTime(audioElement.currentTime, useGreekNumerals);
     }
   });
 
@@ -399,7 +460,6 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
   }
-
 
  // --- AUTOMATIC SYSTEM SYNCED DARK MODE TOGGLE ---
   const savedTheme = localStorage.getItem("theme");

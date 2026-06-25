@@ -38,9 +38,11 @@ document.addEventListener("DOMContentLoaded", () => {
         </select>
       </label>
       <br><br>
-      <button id="toggle-greek-time" class="settings-btn">
-        Time Display: <span id="greek-time-status">Standard</span>
-      </button>
+      <label>Time Display:
+        <button id="toggle-greek-time" class="settings-btn">
+          <span id="greek-time-status">Standard</span>
+        </button>
+      </label>
       <br><br>
       <label>Text size: <input type="range" id="fontControl" step="1"><span id="fontValue"></span></label>
       <br><br>
@@ -311,6 +313,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   
   //End of Greek numeral Timeline Track
+  
   // Universal Highlight & Timeline Track
   audio.addEventListener("timeupdate", () => {
     progressBar.value = audio.currentTime;
@@ -318,7 +321,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Track if the phrase changes during this tick
     const oldActivePhrase = currentActive;
     
-    syncVisibleText(false); // Run your default phrase alignment mechanics
+    syncVisibleText(false); // Run default phrase alignment mechanics
     
     const isGreekVisible = (text.style.display !== "none");
     
@@ -343,14 +346,11 @@ document.addEventListener("DOMContentLoaded", () => {
   
     if (isGreekVisible) {
       if (isNewPhraseStarted) {
-        // If a new phrase jumped, wait a split second for the page position to settle, 
-        // then make sure the word isn't pushed out of frame at the bottom.
-        requestAnimationFrame(() => {
-          checkAndCorrectWordVisibility();
-        });
+        // A new paragraph/phrase element just started. 
+        // Let syncVisibleText handle its scrolling, DO NOT run word correction on this frame.
       } else {
-        // If we are just reading word-by-word inside the same line, check continuously
-        // to see if the highlighting wrapped onto a hidden line.
+        // Only run word visibility corrections if we are midway through reading an active line
+        // and it breaks or wraps onto a new line downward.
         checkAndCorrectWordVisibility();
       }
     }

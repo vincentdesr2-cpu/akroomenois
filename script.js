@@ -262,10 +262,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   //Greek Numeral Timeline Track
   function convertToGreekNumerals(num) {
-    if (num === 0) return ' 𐆊'; // Fallback for 00 minutes/seconds
+    if (num === 0) return ' Ο'; // Fallback for 00 minutes/seconds
     
     const tens = [' ', 'Ι', 'Κ', 'Λ', 'Μ', 'Ν', 'Ξ', 'Ο', 'Π', 'Ϙ'];
-    const ones = [' ', 'Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ϛ', 'Ζ', 'Η', 'Θ'];
+    const ones = [' ', 'Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ϝ', 'Ζ', 'Η', 'Θ'];
     
     let result = '';
     

@@ -262,17 +262,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   //Greek Numeral Timeline Track
   function convertToGreekNumerals(num) {
-    if (num === 0) return ' Ο'; // Fallback for 00 minutes/seconds
+    if (num === 0) return '&nbsp;Ο';
     
-    const tens = [' ', 'Ι', 'Κ', 'Λ', 'Μ', 'Ν', 'Ξ', 'Ο', 'Π', 'Ϙ'];
-    const ones = [' ', 'Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ϝ', 'Ζ', 'Η', 'Θ'];
+    const tens = ['&nbsp;', 'Ι', 'Κ', 'Λ', 'Μ', 'Ν', 'Ξ', 'Ο', 'Π', 'Ϙ'];
+    const ones = ['&nbsp;', 'Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ϝ', 'Ζ', 'Η', 'Θ'];
       
     let result = '';
-      
-    // 1. Always evaluate and append the tens place character
     result += tens[Math.floor(num / 10)];
-    
-  // 2. Always evaluate and append the ones place character
     result += ones[num % 10];
       
     return result;
@@ -294,20 +290,20 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   toggleBtn.addEventListener('click', () => {
-  useGreekNumerals = !useGreekNumerals;
-  
-  // Update button text indicator
-  statusText.textContent = useGreekNumerals ? 'Greek' : 'Standard';
-  
-  // Force an immediate UI redraw if audio is paused/playing
-  if (audio) {
-    timeDisplay.textContent = formatAudioTime(audio.currentTime, useGreekNumerals);
-    }
+    useGreekNumerals = !useGreekNumerals;
+    
+    // Update button text indicator
+    statusText.textContent = useGreekNumerals ? 'Greek' : 'Standard';
+    
+    // Force an immediate UI redraw if audio is paused/playing
+    if (audio) {
+      timeDisplay.innerHTML = formatAudioTime(audio.currentTime, useGreekNumerals);
+      }
   });
 
   // Inside your existing audio 'timeupdate' event listener, just swap to this:
   audio.addEventListener('timeupdate', () => {
-    timeDisplay.textContent = formatAudioTime(audio.currentTime, useGreekNumerals);
+    timeDisplay.innerHTML = formatAudioTime(audio.currentTime, useGreekNumerals);
   });
   
   //End of Greek numeral Timeline Track
@@ -355,7 +351,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
     // Update the clock string dynamically
     if (timeDisplay) {
-      timeDisplay.textContent = formatAudioTime(audio.currentTime, useGreekNumerals);
+      timeDisplay.innerHTML = formatAudioTime(audio.currentTime, useGreekNumerals);
     }
   });
 

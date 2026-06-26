@@ -18,7 +18,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const interfaceHTML = `
     <div id="topBar">
       <button id="homeBtn"><img src="icon/arrow-left.svg" alt="Play" width="32" height="32"></button>
-      <div id="title">${document.title}</div> <button id="settingsBtn"><img src="icon/options.svg" alt="Play" width="32" height="32"></button>
+      <div id="title">${document.title}</div>
+      <div id="moreMenuWrapper" style="display: flex; align-items: center; flex-direction: row;">
+        <button id="moreBtn" style="cursor: pointer; z-index: 10;"><img src="icon/options.svg" alt="More Options" width="32" height="32"></button>
+        <div id="extraActionsGroup" style="display: none; align-items: center; gap: 10px; margin-left: 10px;">
+          <button id="settingsBtn" title="Settings" style="cursor: pointer; background: none; border: none;"><img src="icon/options.svg" alt="Settings" width="32" height="32"></button>
+          <button id="contentsBtn" title="Contents" style="cursor: pointer; background: none; border: none; font-size: 24px;">📖</button>
+          <button id="freqBtn" title="Word Frequency" style="cursor: pointer; background: none; border: none; font-size: 24px;">📊</button>
+        </div>
+      </div>
     </div>
 
     <div id="popup">
@@ -96,9 +104,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const timeDisplay = document.getElementById("timeDisplay");
   const notes = document.querySelectorAll(".note-marker");
   const themeToggleBtn = document.getElementById("themeToggleBtn");
-  
   const toggleBtn = document.getElementById('toggle-greek-time');
   const statusText = document.getElementById('greek-time-status');
+  
+  const moreBtn = document.getElementById("moreBtn");
+  const extraActionsGroup = document.getElementById("extraActionsGroup");
+  const contentsBtn = document.getElementById("contentsBtn");
+  const freqBtn = document.getElementById("freqBtn");
 
   let wasPlaying = false;
   let currentActive = null;
@@ -740,6 +752,35 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.setItem("reader_volume", volumeControl.value); // Save preference
   });
 
+  // Handle toggling the action menu visibility
+  if (moreBtn && extraActionsGroup) {
+    moreBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const isHidden = extraActionsGroup.style.display === "none" || extraActionsGroup.style.display === "";
+      
+      if (isHidden) {
+        extraActionsGroup.style.display = "flex";
+      } else {
+        extraActionsGroup.style.display = "none";
+      }
+    });
+  }
+
+  // Placeholder listeners for your new feature pathways
+  if (contentsBtn) {
+    contentsBtn.addEventListener("click", () => {
+      console.log("Table of Contents opened!");
+      // Your table of contents modal or view logic goes here
+    });
+  }
+
+  if (freqBtn) {
+    freqBtn.addEventListener("click", () => {
+      console.log("Word Frequency metrics opened!");
+      // Your niche philological vocabulary analyzer logic goes here
+    });
+  }
+  
   // Settings Actions
   if (homeBtn) homeBtn.addEventListener("click", () => console.log("Home clicked"));
 

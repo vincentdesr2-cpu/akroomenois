@@ -20,11 +20,12 @@ document.addEventListener("DOMContentLoaded", () => {
       <button id="homeBtn"><img src="icon/arrow-left.svg" alt="Play" width="32" height="32"></button>
       <div id="title">${document.title}</div>
       <div id="moreMenuWrapper" style="display: flex; align-items: center; flex-direction: row;">
-        <div id="extraActionsGroup" style="display: none; align-items: center; gap: 10px; margin-left: 10px;">
+        <div id="extraActionsGroup" style="display: none; align-items: center; gap: 10px; margin-right: 10px;">
+          <button id="freqBtn" title="Word Frequency" style="cursor: pointer; z-index: 10;"><img src="icon/insights.svg" alt="Settings" width="32" height="32"></button>
+          <button id="contentsBtn" title="Contents" style="cursor: pointer; z-index: 10;"><img src="icon/layout-list.svg" alt="Settings" width="32" height="32"></button>
           <button id="settingsBtn" title="Settings" style="cursor: pointer; z-index: 10;"><img src="icon/options.svg" alt="Settings" width="32" height="32"></button>
-          <button id="contentsBtn" title="Contents" style="cursor: pointer; z-index: 10; font-size: 24px;">📖</button>
-          <button id="freqBtn" title="Word Frequency" style="cursor: pointer; z-index: 10; font-size: 24px;">📊</button>
         </div>
+        
         <button id="moreBtn" style="cursor: pointer; z-index: 10;"><img src="icon/more-vertical-alt.svg" alt="More Options" width="32" height="32"></button>
       </div>
     </div>

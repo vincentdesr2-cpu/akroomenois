@@ -52,9 +52,9 @@ document.addEventListener("DOMContentLoaded", () => {
       <h5 style="text-align: center;">Text</h5>
       <label>Font: 
         <select id="fontFamilyControl">
-          <option value="'SBL'">SBL</option>
-          <option value="'EB Garamond'">EB Garamond</option>
-          <option value="'Anaktoria'">Anaktoria</option>
+          <option value="SBL">SBL</option>
+          <option value="EB Garamond">EB Garamond</option>
+          <option value="Anaktoria">Anaktoria</option>
         </select>
       </label>
       <br><br>

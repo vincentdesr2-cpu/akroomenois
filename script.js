@@ -397,7 +397,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return `${mins}:${formattedSecs}`;
   }
 
-  // Handle Clicking Note Markers (With Auto-URL Linking)
+  // Handle Clicking Note Markers (With Auto-URL Linking & Smart Punctuation Cleansing)
   notes.forEach((note) => {
     note.addEventListener("click", (e) => {
       e.stopPropagation(); 
@@ -408,14 +408,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
       let noteContent = note.dataset.note || "No note data available.";
 
-      // REgex to find URLs starting with http://, https://, or www.
+      // Regex to find URLs starting with http://, https://, or www.
       const urlRegex = /(https?:\/\/[^\s]+|www\.[^\s]+)/g;
       
       // Automatically wrap the raw URL inside a clickable anchor tag
-      noteContent = noteContent.replace(urlRegex, (url) => {
-        // Fix URLs missing the protocol prefix so they link externally correctly
-        const hyperLink = url.startsWith("http") ? url : `https://${url}`;
-        return `<a href="${hyperLink}" target="_blank" style="color: #007bff; text-decoration: underline; break-all: break-word;">${url}</a>`;
+      noteContent = noteContent.replace(urlRegex, (matchedUrl) => {
+        // 1. Separate trailing punctuation (like text-ending periods or commas) from the link
+        const punctuationMatch = matchedUrl.match(/[.,;:!)]+$/);
+        let trailingPunctuation = "";
+        let cleanUrl = matchedUrl;
+
+        if (punctuationMatch) {
+          trailingPunctuation = punctuationMatch[0];
+          cleanUrl = matchedUrl.slice(0, -trailingPunctuation.length);
+        }
+
+        // 2. Build the legitimate target destination link safely
+        const hyperLink = cleanUrl.startsWith("http") ? cleanUrl : `https://${cleanUrl}`;
+        
+        // 3. Insert &shy; right after forward slashes so long web links wrap cleanly on lines
+        const breakableUrlText = cleanUrl.replace(/\//g, "/&shy;");
+
+        // 4. Return the anchor element, keeping the trailing dot safely outside the <a> tag
+        return `<a href="${hyperLink}" target="_blank" style="color: #007bff; text-decoration: underline; word-break: break-word;">${breakableUrlText}</a>${trailingPunctuation}`;
       });
 
       // Inject the processed text safely into your popup window

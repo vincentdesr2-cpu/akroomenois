@@ -111,23 +111,31 @@ span {
   background-color: transparent;
 }
 
+/* Standard Desktop Rules */
 #playerBar {
-  position: fixed;
-  bottom: 0;
-  left: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   width: 100%;
+  padding: 10px 0;
+  box-sizing: border-box;
 
   background: #222;
   color: white;
-
-  display: flex;
-  align-items: center;
-  gap: 10px;
-
-  padding: 10px;
-  box-sizing: border-box;
-
   z-index: 1000;
+  box-sizing: border-box;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  gap: 10px;
+}
+
+#timeDisplay {
+  color: white;
+  font-family: monospace !important;
+  margin: 0 10px;
+  font-size: 16px;
+  white-space: nowrap;
 }
 
 #playerBar button {
@@ -232,35 +240,33 @@ span {
   cursor: pointer;
 }
 
-/* Media Query targeting standard mobile phone viewports */
+/* =========================================================
+   CLEAN MOBILE PHONE VIEWPORT RULES (MAX-WIDTH: 768px)
+   ========================================================= */
 @media (max-width: 768px) {
   
-  /* 1. Hide the tracking slider track and numerical timestamps */
+  /* 1. Hide the timeline tracking slider and the timestamps */
   #progressBar,
   #timeDisplay {
-    display: none !important;
+    display: none;
   }
 
-  /* 2. Re-architect the control bar to handle centering */
-  #controls {
-    display: flex;
-    justify-content: center !important; /* Push children to the absolute middle */
-    align-items: center !important;
-    position: relative;     /* Set up a frame for absolute side positioning */
-    width: 100%;
-    padding: 10px 0;
+  /* 2. Overwrite the desktop layout: change space-between to center alignment */
+  #playerBar {
+    justify-content: center !important;
+    gap: 0; /* Clear out any flex gap spacing that pushes items apart */
   }
 
-  /* 3. Group the audio playback actions together in the exact middle layout */
-  #controls > button:not(#langBtn) {
-    margin: 0 10px; /* Give the backward, play, and forward keys comfortable thumb spacing */
+  /* 3. Give your playback button trio uniform, touch-friendly thumb spacing */
+  #playerBar > button:not(#langBtn) {
+    margin: 0 10px;
   }
 
-  /* 4. Use absolute positioning to isolate the English button on the right wall 
-        without impacting the centered alignment of the media buttons */
+  /* 4. Absolute positioning pins this button tightly against the right wall 
+        of the fixed bar, without throwing off the layout of the centered buttons */
   #langBtn {
     position: absolute;
     right: 15px;
-    margin: 0 !important;
+    margin: 0;
   }
 }

@@ -231,3 +231,36 @@ span {
   font-size: 20px;
   cursor: pointer;
 }
+
+/* Media Query targeting standard mobile phone viewports */
+@media (max-width: 768px) {
+  
+  /* 1. Hide the tracking slider track and numerical timestamps */
+  #progressBar,
+  #timeDisplay {
+    display: none !important;
+  }
+
+  /* 2. Re-architect the control bar to handle centering */
+  #controls {
+    display: flex;
+    justify-content: center; /* Push children to the absolute middle */
+    align-items: center;
+    position: relative;     /* Set up a frame for absolute side positioning */
+    width: 100%;
+    padding: 10px 0;
+  }
+
+  /* 3. Group the audio playback actions together in the exact middle layout */
+  #controls > button:not(#langBtn) {
+    margin: 0 10px; /* Give the backward, play, and forward keys comfortable thumb spacing */
+  }
+
+  /* 4. Use absolute positioning to isolate the English button on the right wall 
+        without impacting the centered alignment of the media buttons */
+  #langBtn {
+    position: absolute;
+    right: 15px;
+    margin: 0 !important;
+  }
+}

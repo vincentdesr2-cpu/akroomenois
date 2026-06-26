@@ -805,28 +805,36 @@ document.addEventListener("DOMContentLoaded", () => {
   // Fullscreen Mode Toggle Listener
   if (fullscreenBtn) {
     fullscreenBtn.addEventListener("click", () => {
-      // If the page is NOT currently in fullscreen mode, enter it
       if (!document.fullscreenElement) {
         document.documentElement.requestFullscreen()
           .then(() => {
             fullscreenBtn.textContent = "Windowed";
+            // Prevent the elastic pull-down boundary behavior on mobile
+            document.documentElement.style.overscrollBehavior = "contain";
+            document.body.style.overscrollBehavior = "contain";
           })
           .catch((err) => {
             console.error(`Error attempting to enable fullscreen: ${err.message}`);
           });
       } else {
-        // Otherwise, exit fullscreen mode
         document.exitFullscreen();
         fullscreenBtn.textContent = "Fullscreen";
+        // Restore standard scrolling behavior
+        document.documentElement.style.overscrollBehavior = "auto";
+        document.body.style.overscrollBehavior = "auto";
       }
     });
 
-    // Sync button text if the user exits fullscreen using the 'Esc' key
+    // Handle standard fallbacks if the user hits the system 'Esc' key or native gestures
     document.addEventListener("fullscreenchange", () => {
       if (!document.fullscreenElement) {
-        fullscreenBtn.textContent = "Enter Fullscreen";
+        fullscreenBtn.textContent = "Fullscreen";
+        document.documentElement.style.overscrollBehavior = "auto";
+        document.body.style.overscrollBehavior = "auto";
       } else {
-        fullscreenBtn.textContent = "Exit Fullscreen";
+        fullscreenBtn.textContent = "Windowed";
+        document.documentElement.style.overscrollBehavior = "contain";
+        document.body.style.overscrollBehavior = "contain";
       }
     });
   }

@@ -174,14 +174,14 @@ document.addEventListener("DOMContentLoaded", () => {
   // Viewport checking functions for autoscroll
   function isOutOfView(el) {
     const rect = el.getBoundingClientRect();
-    const topOffset = 60;   
+    const topOffset = 80;   
     const bottomOffset = window.innerHeight - 100; 
     return rect.top < topOffset + 40 || rect.bottom > bottomOffset - 40;
   }
 
   function scrollToTop(el) {
   window.scrollTo({
-    top: window.scrollY + el.getBoundingClientRect().top - 60, 
+    top: window.scrollY + el.getBoundingClientRect().top - 80, 
     behavior: "smooth" 
   });
 
@@ -190,7 +190,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // instantaneous jumping
   function jumpToTop(el) {
   window.scrollTo({
-    top: window.scrollY + el.getBoundingClientRect().top - 60,
+    top: window.scrollY + el.getBoundingClientRect().top - 80,
     behavior: "auto" // "auto" means immediate snap, no smooth sliding
   });
 }

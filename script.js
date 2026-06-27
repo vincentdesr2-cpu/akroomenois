@@ -56,6 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <option value="EB Garamond">EB Garamond</option>
           <option value="Anaktoria">Anaktoria</option>
         </select>
+        <button id="advancedFontBtn" class="settings-btn" style="cursor: pointer;">Advanced</button>
       </label>
       <br><br>
       <label>Size: <input type="range" id="fontControl" step="1"><span id="fontValue"></span></label>

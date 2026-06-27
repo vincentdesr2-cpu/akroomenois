@@ -36,6 +36,11 @@ document.addEventListener("DOMContentLoaded", () => {
     </div>
     <div id="popupOverlay"></div>
 
+    <div id="advancedFontPopup">
+      <button id="closePopup">✕</button>
+      <h3>Advanced Font Settings</h3>
+    </div>
+
     <div id="settingsPopup">
       <button id="closeSettings">✕</button>
       <h3>Settings</h3>
@@ -843,6 +848,13 @@ document.addEventListener("DOMContentLoaded", () => {
   
   // Settings Actions
   if (homeBtn) homeBtn.addEventListener("click", () => console.log("Home clicked"));
+
+  advancedFontBtn.addEventListener("click", () => {
+    wasPlaying = !audio.paused;
+    audio.pause();
+    advancedFontPopup.style.display = "block";
+    popupOverlay.style.display = "block";
+  });
 
   settingsBtn.addEventListener("click", () => {
     wasPlaying = !audio.paused;

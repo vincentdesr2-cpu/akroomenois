@@ -269,4 +269,8 @@ span {
     right: 15px;
     margin: 0;
   }
+
+  body {
+  padding: 60px 40px 50px;
+  }
 }

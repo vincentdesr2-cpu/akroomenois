@@ -95,6 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const words = document.querySelectorAll("#text span.word");
   const phrasesEn = document.querySelectorAll("#text_en > span.phrase_en");
   const settingsPopup = document.getElementById("settingsPopup");
+  const advancedFontPopup = document.getElementById("advancedFontPopup");
   const closeSettings = document.getElementById("closeSettings");
   const popup = document.getElementById("popup");
   const popupOverlay = document.getElementById("popupOverlay");

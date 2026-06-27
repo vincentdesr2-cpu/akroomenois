@@ -101,6 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const langBtn = document.getElementById("langBtn");
   const homeBtn = document.getElementById("homeBtn");
   const settingsBtn = document.getElementById("settingsBtn");
+  const advancedFontBtn = document.getElementById("advancedFontBtn");
   const speedControl = document.getElementById("speedControl");
   const speedValue = document.getElementById("speedValue");
   const fontControl = document.getElementById("fontControl");

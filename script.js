@@ -741,25 +741,53 @@ document.addEventListener("DOMContentLoaded", () => {
   // ==========================================
   // SIGMA GLYPH VARIANT SELECTION CONTROL
   // ==========================================
-  if (sigmaStyleControl && text) {
-    // 1. Load saved sigma preference on page boot
+  if (sigmaStyleControl) {
+    const greekWords = document.querySelectorAll("#text span.word");
+
+    // 1. First-time initialization: Cache raw text in data attributes
+    greekWords.forEach(wordElement => {
+      if (!wordElement.hasAttribute("data-raw-text")) {
+        // Cache the pristine original text string (keeps sigmas standard for lookups/copying)
+        wordElement.setAttribute("data-raw-text", wordElement.textContent);
+      }
+    });
+
+    // Helper function to swap standard sigmas to lunate sigmas textually
+    const applyLunateSigma = (textString) => {
+      // Replaces standard lowercase sigma (σ) and final lowercase sigma (ς) with lunate sigma (ϲ)
+      return textString.replace(/σ/g, "ϲ").replace(/ς/g, "ϲ");
+    };
+
+    // Helper to update the text across the document nodes safely
+    const updateDocumentSigmaStyle = (style) => {
+      greekWords.forEach(wordElement => {
+        const rawText = wordElement.getAttribute("data-raw-text");
+        
+        // Target text nodes directly so we don't destroy inner styling elements or word bounds
+        let textNode = Array.from(wordElement.childNodes).find(node => node.nodeType === Node.TEXT_NODE);
+        
+        if (textNode) {
+          if (style === "lunate") {
+            textNode.textContent = applyLunateSigma(rawText);
+          } else {
+            textNode.textContent = rawText; // Fall back to standard σ/ς
+          }
+        }
+      });
+    };
+
+    // 2. Load and boot up with saved user configuration
     const savedSigmaStyle = localStorage.getItem("reader_sigmaStyle") || "standard";
     sigmaStyleControl.value = savedSigmaStyle;
-    
     if (savedSigmaStyle === "lunate") {
-      text.classList.add("lunate-sigma-active");
+      updateDocumentSigmaStyle("lunate");
     }
 
-    // 2. Listen for real-time user selections
+    // 3. Listen for changes on the dropdown selection
     sigmaStyleControl.addEventListener("change", () => {
       const selectedStyle = sigmaStyleControl.value;
-      localStorage.setItem("reader_sigmaStyle", selectedStyle); // Save choice
-
-      if (selectedStyle === "lunate") {
-        text.classList.add("lunate-sigma-active");
-      } else {
-        text.classList.remove("lunate-sigma-active");
-      }
+      localStorage.setItem("reader_sigmaStyle", selectedStyle); // Cache state
+      updateDocumentSigmaStyle(selectedStyle);
     });
   }
   

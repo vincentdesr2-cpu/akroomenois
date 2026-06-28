@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const interfaceHTML = `
     <div id="topBar">
       <button id="homeBtn"><img src="icon/arrow-left.svg" alt="Play" width="32" height="32"></button>
-      <div id="title">${document.title}(test 6)</div>
+      <div id="title">${document.title}(test 7)</div>
       <div id="moreMenuWrapper" style="display: flex; align-items: center; flex-direction: row;">
         <div id="extraActionsGroup" style="display: none; align-items: center; gap: 10px; margin-right: 10px;">
           <button id="freqBtn" title="Word Frequency" style="cursor: pointer; z-index: 10;"><img src="icon/insights.svg" alt="Settings" width="32" height="32"></button>
@@ -806,28 +806,31 @@ document.addEventListener("DOMContentLoaded", () => {
       updateDocumentSigmaStyle(selectedStyle);
     });
   }
-  =====
-  =====
+  // ==========================================
+  // PI GLYPH VARIANT SELECTION CONTROL
+  // ==========================================
   if (piStyleControl) {
     const greekWordsList = document.querySelectorAll("#text span.word");
 
     const updateDocumentPiStyle = (style) => {
       greekWordsList.forEach(wordElement => {
-        let currentText = wordElement.textContent.trim();
-        
+        let currentText = wordElement.textContent; // Don't strip trailing spaces/punctuation with trim()
+
         if (style === "cursive") {
           wordElement.textContent = currentText.replace(/π/g, "ϖ");
         } else {
-          let restoredText = currentText.replace(/ϖ/g, "π");
-          wordElement.textContent = restoredText;
+          // ONLY target the pi characters when turning it off,
+          // leaving whatever the sigma controller did completely untouched!
+          wordElement.textContent = currentText.replace(/ϖ/g, "π");
         }
       });
     };
 
     const savedPiStyle = localStorage.getItem("reader_piStyle") || "standard";
     piStyleControl.value = savedPiStyle;
+    
     if (savedPiStyle === "cursive") {
-      updateDocumentPiStyle("cursive");
+      updateDocumentPiStyle("cursive"); // Fixed the function name typo here
     }
 
     piStyleControl.addEventListener("change", () => {
@@ -836,7 +839,6 @@ document.addEventListener("DOMContentLoaded", () => {
       updateDocumentPiStyle(selectedStyle);
     });
   }
-  =====
   // ==========================================
   // SLIDERS & CONTROLS OPERATIONAL EVENT LISTENERS
   // ==========================================

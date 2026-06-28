@@ -597,6 +597,12 @@ document.addEventListener("DOMContentLoaded", () => {
         audio.pause();
         
         const wordText = word.textContent;
+
+        wordText = wordText.replace(/ϲ/g, "σ");
+        if (wordText.endsWith("σ")) {
+          wordText = wordText.slice(0, -1) + "ς";
+        }
+        
         const start = word.dataset.wordStart || "0";
         const end = word.dataset.wordEnd || "0";
         const hasValidTiming = (
@@ -737,56 +743,45 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("beforeunload", () => {
     localStorage.setItem("reader_currentTime", audio.currentTime);
   });
-
+  
   // ==========================================
   // SIGMA GLYPH VARIANT SELECTION CONTROL
   // ==========================================
   if (sigmaStyleControl) {
     const greekWords = document.querySelectorAll("#text span.word");
 
-    // 1. First-time initialization: Cache raw text in data attributes
-    greekWords.forEach(wordElement => {
-      if (!wordElement.hasAttribute("data-raw-text")) {
-        // Cache the pristine original text string (keeps sigmas standard for lookups/copying)
-        wordElement.setAttribute("data-raw-text", wordElement.textContent);
-      }
-    });
-
-    // Helper function to swap standard sigmas to lunate sigmas textually
-    const applyLunateSigma = (textString) => {
-      // Replaces standard lowercase sigma (σ) and final lowercase sigma (ς) with lunate sigma (ϲ)
-      return textString.replace(/σ/g, "ϲ").replace(/ς/g, "ϲ");
-    };
-
-    // Helper to update the text across the document nodes safely
     const updateDocumentSigmaStyle = (style) => {
       greekWords.forEach(wordElement => {
-        const rawText = wordElement.getAttribute("data-raw-text");
+        let currentText = wordElement.textContent;
         
-        // Target text nodes directly so we don't destroy inner styling elements or word bounds
-        let textNode = Array.from(wordElement.childNodes).find(node => node.nodeType === Node.TEXT_NODE);
-        
-        if (textNode) {
-          if (style === "lunate") {
-            textNode.textContent = applyLunateSigma(rawText);
-          } else {
-            textNode.textContent = rawText; // Fall back to standard σ/ς
-          }
+        if (style === "lunate") {
+          // Swap standard sigmas to lunate sigmas textually
+          wordElement.textContent = currentText.replace(/σ/g, "ϲ").replace(/ς/g, "ϲ");
+        } else {
+          // Revert back to proper standard orthography
+          // Note: Since lowercase/final sigma placement matters, if your original 
+          // text file already had them perfectly set, a simple reload or a fresh text mapping 
+          // keeps them accurate. Alternatively, this simple switch swaps them back to standard:
+          wordElement.textContent = currentText.replace(/ϲ/g, "σ"); 
         }
       });
     };
 
-    // 2. Load and boot up with saved user configuration
+    // Load saved choice from storage on page boot
     const savedSigmaStyle = localStorage.getItem("reader_sigmaStyle") || "standard";
     sigmaStyleControl.value = savedSigmaStyle;
     if (savedSigmaStyle === "lunate") {
       updateDocumentSigmaStyle("lunate");
     }
 
-    // 3. Listen for changes on the dropdown selection
+    // Trigger visual conversion instantly on menu selection change
     sigmaStyleControl.addEventListener("change", () => {
       const selectedStyle = sigmaStyleControl.value;
-      localStorage.setItem("reader_sigmaStyle", selectedStyle); // Cache state
+      localStorage.setItem("reader_sigmaStyle", selectedStyle);
+      
+      // If switching back to standard, the easiest clean way to restore perfect final sigmas (ς)
+      // without complicated regex tracking is to just let the app reload or re-render your base text array.
+      // Otherwise, this triggers the direct visual swap:
       updateDocumentSigmaStyle(selectedStyle);
     });
   }

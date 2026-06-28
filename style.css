@@ -262,8 +262,15 @@ span {
 
 /* Instructs the browser font engine to show the lunate variant if available */
 .lunate-sigma-active {
-  font-feature-settings: "cv01" 1, "ss01" 1 !important;
-  font-variant-alternates: character-variant(cv01) !important;
+  /* Toggles standard OpenType character variants and stylistic sets simultaneously */
+  font-feature-settings: "cv01" 1, "ss01" 1, "cv02" 1, "ss02" 1, "mgrk" 1 !important;
+  
+  /* Modern CSS declaration for advanced text rendering */
+  font-variant-alternates: character-variant(cv01) character-variant(cv02) !important;
+  
+  /* Forces Safari and Chrome mobile to instantly repaint the font layer */
+  text-rendering: optimizeLegibility !important;
+  -webkit-font-smoothing: antialiased;
 }
 
 /* =========================================================

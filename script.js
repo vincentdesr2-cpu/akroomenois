@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const interfaceHTML = `
     <div id="topBar">
       <button id="homeBtn"><img src="icon/arrow-left.svg" alt="Play" width="32" height="32"></button>
-      <div id="title">${document.title}(test 1)</div>
+      <div id="title">${document.title}(test 2)</div>
       <div id="moreMenuWrapper" style="display: flex; align-items: center; flex-direction: row;">
         <div id="extraActionsGroup" style="display: none; align-items: center; gap: 10px; margin-right: 10px;">
           <button id="freqBtn" title="Word Frequency" style="cursor: pointer; z-index: 10;"><img src="icon/insights.svg" alt="Settings" width="32" height="32"></button>
@@ -755,19 +755,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const updateDocumentSigmaStyle = (style) => {
       greekWords.forEach(wordElement => {
-        let currentText = wordElement.textContent;
+        let currentText = wordElement.textContent.trim();
         
         if (style === "lunate") {
-          // Swap standard sigmas to lunate sigmas textually
+          // Turn both types of standard sigmas into a lunate sigma
           wordElement.textContent = currentText.replace(/σ/g, "ϲ").replace(/ς/g, "ϲ");
         } else {
-          // Revert back to proper standard orthography
-          // Note: Since lowercase/final sigma placement matters, if your original 
-          // text file already had them perfectly set, a simple reload or a fresh text mapping 
-          // keeps them accurate. Alternatively, this simple switch swaps them back to standard:
-          wordElement.textContent = currentText.replace(/ϲ/g, "σ"); 
-        }
-      });
+          // 1. Turn all lunate sigmas back into standard mid-sigmas
+          let restoredText = currentText.replace(/ϲ/g, "σ");
+          
+          // 2. Fix the last character to be a final sigma if it ends the word
+          if (restoredText.endsWith("σ")) {
+            restoredText = restoredText.slice(0, -1) + "ς";
+          }
+          
+          // 3. Push the fully repaired text back to the screen
+          wordElement.textContent = restoredText;
+          }
+        });
+      };
     };
 
     // Load saved choice from storage on page boot

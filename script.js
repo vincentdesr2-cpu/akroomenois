@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const interfaceHTML = `
     <div id="topBar">
       <button id="homeBtn"><img src="icon/arrow-left.svg" alt="Play" width="32" height="32"></button>
-      <div id="title">${document.title}(test 2)</div>
+      <div id="title">${document.title}(test 3)</div>
       <div id="moreMenuWrapper" style="display: flex; align-items: center; flex-direction: row;">
         <div id="extraActionsGroup" style="display: none; align-items: center; gap: 10px; margin-right: 10px;">
           <button id="freqBtn" title="Word Frequency" style="cursor: pointer; z-index: 10;"><img src="icon/insights.svg" alt="Settings" width="32" height="32"></button>
@@ -751,46 +751,33 @@ document.addEventListener("DOMContentLoaded", () => {
   // SIGMA GLYPH VARIANT SELECTION CONTROL
   // ==========================================
   if (sigmaStyleControl) {
-    const greekWords = document.querySelectorAll("#text span.word");
+    const greekWordsList = document.querySelectorAll("#text span.word");
 
     const updateDocumentSigmaStyle = (style) => {
-      greekWords.forEach(wordElement => {
+      greekWordsList.forEach(wordElement => {
         let currentText = wordElement.textContent.trim();
         
         if (style === "lunate") {
-          // Turn both types of standard sigmas into a lunate sigma
           wordElement.textContent = currentText.replace(/σ/g, "ϲ").replace(/ς/g, "ϲ");
         } else {
-          // 1. Turn all lunate sigmas back into standard mid-sigmas
           let restoredText = currentText.replace(/ϲ/g, "σ");
-          
-          // 2. Fix the last character to be a final sigma if it ends the word
           if (restoredText.endsWith("σ")) {
             restoredText = restoredText.slice(0, -1) + "ς";
           }
-          
-          // 3. Push the fully repaired text back to the screen
           wordElement.textContent = restoredText;
-          }
-        });
-      };
+        }
+      });
     };
 
-    // Load saved choice from storage on page boot
     const savedSigmaStyle = localStorage.getItem("reader_sigmaStyle") || "standard";
     sigmaStyleControl.value = savedSigmaStyle;
     if (savedSigmaStyle === "lunate") {
       updateDocumentSigmaStyle("lunate");
     }
 
-    // Trigger visual conversion instantly on menu selection change
     sigmaStyleControl.addEventListener("change", () => {
       const selectedStyle = sigmaStyleControl.value;
       localStorage.setItem("reader_sigmaStyle", selectedStyle);
-      
-      // If switching back to standard, the easiest clean way to restore perfect final sigmas (ς)
-      // without complicated regex tracking is to just let the app reload or re-render your base text array.
-      // Otherwise, this triggers the direct visual swap:
       updateDocumentSigmaStyle(selectedStyle);
     });
   }

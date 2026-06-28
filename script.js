@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const interfaceHTML = `
     <div id="topBar">
       <button id="homeBtn"><img src="icon/arrow-left.svg" alt="Play" width="32" height="32"></button>
-      <div id="title">${document.title}</div>
+      <div id="title">${document.title}(test 1)</div>
       <div id="moreMenuWrapper" style="display: flex; align-items: center; flex-direction: row;">
         <div id="extraActionsGroup" style="display: none; align-items: center; gap: 10px; margin-right: 10px;">
           <button id="freqBtn" title="Word Frequency" style="cursor: pointer; z-index: 10;"><img src="icon/insights.svg" alt="Settings" width="32" height="32"></button>
@@ -595,14 +595,17 @@ document.addEventListener("DOMContentLoaded", () => {
       if (phrase && phrase.classList.contains("active")) {
         wasPlaying = !audio.paused; 
         audio.pause();
-        
         const wordText = word.textContent;
 
-        wordText = wordText.replace(/ϲ/g, "σ");
-        if (wordText.endsWith("σ")) {
-          wordText = wordText.slice(0, -1) + "ς";
+        // 1. Create a totally isolated variable for the dictionary display
+        let dictionaryLookupTerm = word.textContent;
+        // 2. Normalize lunate sigmas to standard mid-sigmas
+        dictionaryLookupTerm = dictionaryLookupTerm.replace(/ϲ/g, "σ");
+        // 3. Flip to a final sigma ONLY if it sits at the end of the clean word string
+        if (dictionaryLookupTerm.endsWith("σ")) {
+          dictionaryLookupTerm = dictionaryLookupTerm.slice(0, -1) + "ς";
         }
-        
+
         const start = word.dataset.wordStart || "0";
         const end = word.dataset.wordEnd || "0";
         const hasValidTiming = (
@@ -616,7 +619,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const audioButtonHTML = hasValidTiming 
           ? `<button id="dictSpeakBtn" data-start="${start}" data-end="${end}" style= cursor: pointer;">🔊</button>` 
           : '';
-        popupContent.innerHTML = `<p><strong>Word:</strong> ${word.textContent} ${audioButtonHTML}<br><br><strong>Lemma:</strong><br><br><strong>Word Type:</strong><br><br><strong>Grammar:</strong></p>`;
+        popupContent.innerHTML = `<p><strong>Word:</strong> ${dictionaryLookupTerm} ${audioButtonHTML}<br><br><strong>Lemma:</strong><br><br><strong>Word Type:</strong><br><br><strong>Grammar:</strong></p>`;
         popup.style.display = "block";
         popupOverlay.style.display = "block";
         setupDictionaryAudioButton();

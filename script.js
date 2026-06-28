@@ -154,6 +154,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const freqBtn = document.getElementById("freqBtn");
   const fullscreenBtn = document.getElementById('fullscreenBtn');
   const sigmaStyleControl = document.getElementById("sigmaStyleControl");
+  const piStyleControl = document.getElementById("piStyleControl");
+  const kappaStyleControl = document.getElementById("kappaStyleControl");
+  const stigmaStyleControl = document.getElementById("stigmaStyleControl");
 
   let wasPlaying = false;
   let currentActive = null;

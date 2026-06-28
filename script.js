@@ -774,7 +774,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // ==========================================
   // SIGMA GLYPH VARIANT SELECTION CONTROL
   // ==========================================
-  =====
   if (sigmaStyleControl) {
     const greekWordsList = document.querySelectorAll("#text span.word");
 

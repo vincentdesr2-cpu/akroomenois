@@ -45,6 +45,13 @@ document.addEventListener("DOMContentLoaded", () => {
           <option value="lunate">ϲ (Lunate)</option>
         </select>
       </label>
+      <br><br>
+      <label>Pi: 
+         <select id="piStyleControl">
+           <option value="standard">π (Standard)</option>
+           <option value="cursive">ϖ (Cursive)</option>
+         </select>
+      </label>
     </div>
 
     <div id="settingsPopup">

@@ -48,6 +48,13 @@
   font-display: swap;
 }
 
+.chapter-body {
+  display: none;
+}
+.chapter-body.active {
+  display: block;
+}
+
 body {
   font-family: EB Garamond;
   padding: 120px 80px 100px;

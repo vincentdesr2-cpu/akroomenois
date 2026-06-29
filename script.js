@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const interfaceHTML = `
     <div id="topBar">
       <button id="homeBtn"><img src="icon/arrow-left.svg" alt="Play" width="32" height="32"></button>
-      <div id="title">${document.title}(test 10)</div>
+      <div id="title">${document.title}(test 11)</div>
       <div id="moreMenuWrapper" style="display: flex; align-items: center; flex-direction: row;">
         <div id="extraActionsGroup" style="display: none; align-items: center; gap: 10px; margin-right: 10px;">
           <button id="freqBtn" title="Word Frequency" style="cursor: pointer; z-index: 10;"><img src="icon/insights.svg" alt="Settings" width="32" height="32"></button>
@@ -882,11 +882,15 @@ document.addEventListener("DOMContentLoaded", () => {
         let currentText = wordElement.textContent; // Don't strip trailing spaces/punctuation with trim()
 
         if (style === "monograph") {
-          wordElement.textContent = currentText.replace(/στ/g, "ϛ").replace(/Στ/g, "Ϛ");
+          wordElement.textContent = currentText.replace(/στ/g, "ϛ").replace(/ϲτ/g, "ϛ").replace(/Στ/g, "Ϛ").replace(/Ϲτ/g, "Ϛ");
         } else {
           // ONLY target the stigma characters when turning it off,
           // leaving whatever the sigma controller did completely untouched!
-          wordElement.textContent = currentText.replace(/ϛ/g, "στ").replace(/Ϛ/g, "Στ");
+          if (savedSigmaStyle === "lunate") {
+            wordElement.textContent = currentText.replace(/ϛ/g, "ϲτ").replace(/Ϛ/g, "Ϲτ");
+          } else {
+            wordElement.textContent = currentText.replace(/ϛ/g, "στ").replace(/Ϛ/g, "Στ");
+          }
         }
       });
     };

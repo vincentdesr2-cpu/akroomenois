@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const interfaceHTML = `
     <div id="topBar">
       <button id="homeBtn"><img src="icon/arrow-left.svg" alt="Play" width="32" height="32"></button>
-      <div id="title">${document.title}(test 13)</div>
+      <div id="title">${document.title}(test 14)</div>
       <div id="moreMenuWrapper" style="display: flex; align-items: center; flex-direction: row;">
         <div id="extraActionsGroup" style="display: none; align-items: center; gap: 10px; margin-right: 10px;">
           <button id="freqBtn" title="Word Frequency" style="cursor: pointer; z-index: 10;"><img src="icon/insights.svg" alt="Settings" width="32" height="32"></button>
@@ -982,7 +982,7 @@ document.addEventListener("DOMContentLoaded", () => {
       greekWordsList.forEach(wordElement => {
         let currentText = wordElement.textContent;
 
-        if (style === "ligature" && word.length === 3) {
+        if (style === "ligature" && currentText.length === 3) {
           // Turn both standard and lunate combinations into the ligature ligatures
           wordElement.textContent = currentText.replace(/και/g, "ϗ")
                                                .replace(/καί/g, "ϗ́")
@@ -1008,7 +1008,7 @@ document.addEventListener("DOMContentLoaded", () => {
     kaiStyleControl.value = savedKaiStyle;
     
     if (savedKaiStyle === "ligature") {
-      updateDocumentStigmaStyle("ligature");
+      updateDocumentKaiStyle("ligature");
     }
 
     kaiStyleControl.addEventListener("change", () => {

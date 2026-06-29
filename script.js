@@ -983,8 +983,8 @@ document.addEventListener("DOMContentLoaded", () => {
         let currentText = wordElement.textContent;
         let cleanText = currentText.trim();
 
-        if (style === "ligature" && cleanText.length === 3) {
-          // Turn both standard and lunate combinations into the ligature ligatures
+        if (style === "ligature" && currentText.length === 3) {
+          // Turn both standard and cursive combinations into the ligature ligatures
           wordElement.textContent = currentText.replace(/και/g, "ϗ").replace(/καί/g, "ϗ́").replace(/καὶ/g, "ϗ̀").replace(/Και/g, "Ϗ").replace(/Καί/g, "Ϗ́").replace(/Καὶ/g, "Ϗ̀").replace(/ϰαι/g, "ϗ").replace(/ϰαί/g, "ϗ́").replace(/ϰαὶ/g, "ϗ̀");
         } else {
           // Turning ligature OFF: check what style of sigma we need to return to

@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const interfaceHTML = `
     <div id="topBar">
       <button id="homeBtn"><img src="icon/arrow-left.svg" alt="Play" width="32" height="32"></button>
-      <div id="title">${document.title}(test 11)</div>
+      <div id="title">${document.title}(test 12)</div>
       <div id="moreMenuWrapper" style="display: flex; align-items: center; flex-direction: row;">
         <div id="extraActionsGroup" style="display: none; align-items: center; gap: 10px; margin-right: 10px;">
           <button id="freqBtn" title="Word Frequency" style="cursor: pointer; z-index: 10;"><img src="icon/insights.svg" alt="Settings" width="32" height="32"></button>
@@ -871,22 +871,28 @@ document.addEventListener("DOMContentLoaded", () => {
       updateDocumentKappaStyle(selectedStyle);
     });
   }
-  //==========================================
+  // ==========================================
   // STIGMA GLYPH VARIANT SELECTION CONTROL
   // ==========================================
   if (stigmaStyleControl) {
     const greekWordsList = document.querySelectorAll("#text span.word");
 
     const updateDocumentStigmaStyle = (style) => {
+      // DYNAMIC CHECK: Look up exactly what the sigma select is currently set to right now
+      const currentLiveSigmaStyle = sigmaStyleControl ? sigmaStyleControl.value : "standard";
+
       greekWordsList.forEach(wordElement => {
-        let currentText = wordElement.textContent; // Don't strip trailing spaces/punctuation with trim()
+        let currentText = wordElement.textContent;
 
         if (style === "monograph") {
-          wordElement.textContent = currentText.replace(/στ/g, "ϛ").replace(/ϲτ/g, "ϛ").replace(/Στ/g, "Ϛ").replace(/Ϲτ/g, "Ϛ");
+          // Turn both standard and lunate combinations into the monograph ligatures
+          wordElement.textContent = currentText.replace(/στ/g, "ϛ")
+                                               .replace(/ϲτ/g, "ϛ")
+                                               .replace(/Στ/g, "Ϛ")
+                                               .replace(/Ϲτ/g, "Ϛ");
         } else {
-          // ONLY target the stigma characters when turning it off,
-          // leaving whatever the sigma controller did completely untouched!
-          if (savedSigmaStyle === "lunate") {
+          // Turning monograph OFF: check what style of sigma we need to return to
+          if (currentLiveSigmaStyle === "lunate") {
             wordElement.textContent = currentText.replace(/ϛ/g, "ϲτ").replace(/Ϛ/g, "Ϲτ");
           } else {
             wordElement.textContent = currentText.replace(/ϛ/g, "στ").replace(/Ϛ/g, "Στ");
@@ -899,7 +905,7 @@ document.addEventListener("DOMContentLoaded", () => {
     stigmaStyleControl.value = savedStigmaStyle;
     
     if (savedStigmaStyle === "monograph") {
-      updateDocumentStigmaStyle("monograph"); // Fixed the function name typo here
+      updateDocumentStigmaStyle("monograph");
     }
 
     stigmaStyleControl.addEventListener("change", () => {

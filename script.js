@@ -929,21 +929,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const updateDocumentBetaStyle = (style) => {
       greekWordsList.forEach(wordElement => {
-        let currentText = wordElement.textContent; // Don't strip trailing spaces/punctuation with trim()
+        let currentText = wordElement.textContent;
 
         if (style === "cursive") {
           if (currentText.length > 1) {
-            // Keep the first character raw, and only replace betas inside the rest of the string
             wordElement.textContent = currentText[0] + currentText.slice(1).replace(/β/g, "ϐ");
           } else {
-            // If the word is only 1 letter long, leave it exactly as it is
             wordElement.textContent = currentText;
           }
-        }
         } else {
-          // ONLY target the kappa characters when turning it off,
-          // leaving whatever the sigma controller did completely untouched!
-          wordElement.textContent = currentText.replace(/ϐ/g, "β");
+          // FIX 1: Cleansed syntax braces and added protection when turning cursive OFF
+          if (currentText.length > 1) {
+            wordElement.textContent = currentText[0] + currentText.slice(1).replace(/ϐ/g, "β");
+          } else {
+            wordElement.textContent = currentText;
+          }
         }
       });
     };
@@ -952,7 +952,7 @@ document.addEventListener("DOMContentLoaded", () => {
     betaStyleControl.value = savedBetaStyle;
     
     if (savedBetaStyle === "cursive") {
-      updateDocumentBetaStyle("cursive"); // Fixed the function name typo here
+      updateDocumentBetaStyle("cursive");
     }
 
     betaStyleControl.addEventListener("change", () => {

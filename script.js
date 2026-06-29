@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <label>Stigma: 
          <select id="stigmaStyleControl">
            <option value="standard">στ (Standard)</option>
-           <option value="monograph">ϛ (Monograph)</option>
+           <option value="ligature">ϛ (Ligature)</option>
          </select>
       </label>
     </div>
@@ -884,14 +884,14 @@ document.addEventListener("DOMContentLoaded", () => {
       greekWordsList.forEach(wordElement => {
         let currentText = wordElement.textContent;
 
-        if (style === "monograph") {
-          // Turn both standard and lunate combinations into the monograph ligatures
+        if (style === "ligature") {
+          // Turn both standard and lunate combinations into the ligature ligatures
           wordElement.textContent = currentText.replace(/στ/g, "ϛ")
                                                .replace(/ϲτ/g, "ϛ")
                                                .replace(/Στ/g, "Ϛ")
                                                .replace(/Ϲτ/g, "Ϛ");
         } else {
-          // Turning monograph OFF: check what style of sigma we need to return to
+          // Turning ligature OFF: check what style of sigma we need to return to
           if (currentLiveSigmaStyle === "lunate") {
             wordElement.textContent = currentText.replace(/ϛ/g, "ϲτ").replace(/Ϛ/g, "Ϲτ");
           } else {
@@ -904,8 +904,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const savedStigmaStyle = localStorage.getItem("reader_stigmaStyle") || "standard";
     stigmaStyleControl.value = savedStigmaStyle;
     
-    if (savedStigmaStyle === "monograph") {
-      updateDocumentStigmaStyle("monograph");
+    if (savedStigmaStyle === "ligature") {
+      updateDocumentStigmaStyle("ligature");
     }
 
     stigmaStyleControl.addEventListener("change", () => {

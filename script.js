@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const interfaceHTML = `
     <div id="topBar">
       <button id="homeBtn"><img src="icon/arrow-left.svg" alt="Play" width="32" height="32"></button>
-      <div id="title">${document.title}(test 12)</div>
+      <div id="title">${document.title}(test 13)</div>
       <div id="moreMenuWrapper" style="display: flex; align-items: center; flex-direction: row;">
         <div id="extraActionsGroup" style="display: none; align-items: center; gap: 10px; margin-right: 10px;">
           <button id="freqBtn" title="Word Frequency" style="cursor: pointer; z-index: 10;"><img src="icon/insights.svg" alt="Settings" width="32" height="32"></button>
@@ -39,6 +39,13 @@ document.addEventListener("DOMContentLoaded", () => {
     <div id="advancedFontPopup">
       <button id="closeAdvancedFont">✕</button>
       <h3>Advanced Font Settings</h3>
+      <label>Betta: 
+         <select id="betaStyleControl">
+           <option value="standard">β (Standard)</option>
+           <option value="cursive">ϐ (Cursive)</option>
+         </select>
+      </label>
+      <br><br>
       <label>Kappa: 
          <select id="kappaStyleControl">
            <option value="standard">κ (Standard)</option>
@@ -624,7 +631,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // 1. Create a totally isolated variable for the dictionary display
         let dictionaryLookupTerm = word.textContent;
         // 2. Normalize lunate sigmas to standard mid-sigmas
-        dictionaryLookupTerm = dictionaryLookupTerm.replace(/ϲ/g, "σ").replace(/Ϲ/g, "Σ").replace(/ϖ/g, "π").replace(/ϰ/g, "κ").replace(/ϛ/g, "στ").replace(/Ϛ/g, /Στ/);
+        dictionaryLookupTerm = dictionaryLookupTerm.replace(/ϲ/g, "σ").replace(/Ϲ/g, "Σ").replace(/ϖ/g, "π").replace(/ϰ/g, "κ").replace(/ϛ/g, "στ").replace(/Ϛ/g, "Στ").replace(/ϐ/g, "β");
         // 3. Flip to a final sigma ONLY if it sits at the end of the clean word string
         if (dictionaryLookupTerm.endsWith("σ")) {
           dictionaryLookupTerm = dictionaryLookupTerm.slice(0, -1) + "ς";
@@ -912,6 +919,46 @@ document.addEventListener("DOMContentLoaded", () => {
       const selectedStyle = stigmaStyleControl.value;
       localStorage.setItem("reader_stigmaStyle", selectedStyle);
       updateDocumentStigmaStyle(selectedStyle);
+    });
+  }
+  //==========================================
+  // BETA GLYPH VARIANT SELECTION CONTROL
+  // ==========================================
+  if (betaStyleControl) {
+    const greekWordsList = document.querySelectorAll("#text span.word");
+
+    const updateDocumentBetaStyle = (style) => {
+      greekWordsList.forEach(wordElement => {
+        let currentText = wordElement.textContent; // Don't strip trailing spaces/punctuation with trim()
+
+        if (style === "cursive") {
+          if (currentText.length > 1) {
+            // Keep the first character raw, and only replace betas inside the rest of the string
+            wordElement.textContent = currentText[0] + currentText.slice(1).replace(/β/g, "ϐ");
+          } else {
+            // If the word is only 1 letter long, leave it exactly as it is
+            wordElement.textContent = currentText;
+          }
+        }
+        } else {
+          // ONLY target the kappa characters when turning it off,
+          // leaving whatever the sigma controller did completely untouched!
+          wordElement.textContent = currentText.replace(/ϐ/g, "β");
+        }
+      });
+    };
+
+    const savedBetaStyle = localStorage.getItem("reader_betaStyle") || "standard";
+    betaStyleControl.value = savedBetaStyle;
+    
+    if (savedBetaStyle === "cursive") {
+      updateDocumentBetaStyle("cursive"); // Fixed the function name typo here
+    }
+
+    betaStyleControl.addEventListener("change", () => {
+      const selectedStyle = betaStyleControl.value;
+      localStorage.setItem("reader_betaStyle", selectedStyle);
+      updateDocumentBetaStyle(selectedStyle);
     });
   }
   // ==========================================

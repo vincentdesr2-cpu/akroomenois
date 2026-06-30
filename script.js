@@ -983,7 +983,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let currentText = wordElement.textContent;
         let cleanText = currentText.trim();
 
-        if (style === "ligature" && currentText.length === 3) {
+        if (style === "ligature" && (currentText.length === 3 || currentText.length === 4)) {
           // Turn both standard and cursive combinations into the ligature ligatures
           wordElement.textContent = currentText.replace(/και/g, "ϗ").replace(/κα\u03af/g, "ϗ\u0301").replace(/κα\u1f76|κα\u03b9\u0300/g, "ϗ\u0300").replace(/Και/g, "Ϗ").replace(/Κα\u03af/g, "Ϗ\u0301").replace(/Κα\u1f76/g, "Ϗ\u0300").replace(/ϰαι/g, "ϗ").replace(/ϰα\u03af/g, "ϗ\u0301").replace(/ϰα\u1f76/g, "ϗ\u0300");
         } else {

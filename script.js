@@ -1002,6 +1002,9 @@ document.addEventListener("DOMContentLoaded", () => {
         if (style === "ligature" && trueLength === 3) {
           // Turn both standard and cursive combinations into the ligature ligatures
           wordElement.textContent = currentText.replace(/και/g, "ϗ").replace(/κα\u03af|κα\u03b9\u0301/g, "ϗ\u0301").replace(/κα\u1f76|κα\u03b9\u0300/g, "ϗ\u0300").replace(/Και/g, "Ϗ").replace(/Κα\u03af|Κα\u03b9\u0301/g, "Ϗ\u0301").replace(/Κα\u1f76|Κα\u03b9\u0300/g, "Ϗ\u0300").replace(/ϰαι/g, "ϗ").replace(/ϰα\u03af|ϰα\u03b9\u0301/g, "ϗ\u0301").replace(/ϰα\u1f76|ϰα\u03b9\u0300/g, "ϗ\u0300");
+        }
+        else if (style === "minuscule" && trueLength === 3) {
+          wordElement.textContent = currentText.replace(/Ϗ/g, "Και").replace(/Ϗ\u0301/g, "Κα\u03af").replace(/Ϗ\u0300/g, "Κα\u1f76").replace(/και/g, "ϗ").replace(/κα\u03af|κα\u03b9\u0301/g, "ϗ\u0301").replace(/κα\u1f76|κα\u03b9\u0300/g, "ϗ\u0300").replace(/ϰαι/g, "ϗ").replace(/ϰα\u03af|ϰα\u03b9\u0301/g, "ϗ\u0301").replace(/ϰα\u1f76|ϰα\u03b9\u0300/g, "ϗ\u0300");
         } else {
           // Turning ligature OFF: check what style of sigma we need to return to
           if (currentLiveKappaStyle === "cursive") {
@@ -1018,6 +1021,9 @@ document.addEventListener("DOMContentLoaded", () => {
     
     if (savedKaiStyle === "ligature") {
       updateDocumentKaiStyle("ligature");
+    }
+    else if (savedKaiStyle === "minuscule") {
+      updateDocumentKaiStyle("minuscule");
     }
 
     kaiStyleControl.addEventListener("change", () => {

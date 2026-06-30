@@ -41,15 +41,15 @@ document.addEventListener("DOMContentLoaded", () => {
       <h3>Advanced Font Settings</h3>
       <label>Beta: 
          <select id="betaStyleControl">
-           <option value="standard">β (Standard)</option>
-           <option value="cursive">ϐ (Cursive)</option>
+           <option value="standard">Β β (Standard)</option>
+           <option value="cursive">Β β/ϐ (Cursive)</option>
          </select>
       </label>
       <br><br>
       <label>Kappa: 
          <select id="kappaStyleControl">
-           <option value="standard">κ (Standard)</option>
-           <option value="cursive">ϰ (Cursive)</option>
+           <option value="standard">Κ κ (Standard)</option>
+           <option value="cursive">Κ ϰ (Cursive)</option>
          </select>
       </label>
       <br><br>
@@ -63,15 +63,15 @@ document.addEventListener("DOMContentLoaded", () => {
       <br><br>
       <label>Pi: 
          <select id="piStyleControl">
-           <option value="standard">π (Standard)</option>
-           <option value="cursive">ϖ (Cursive)</option>
+           <option value="standard">Π π (Standard)</option>
+           <option value="cursive">Π ϖ (Cursive)</option>
          </select>
       </label>
       <br><br>
       <label>Sigma: 
         <select id="sigmaStyleControl">
-          <option value="standard">σ/ς (Standard)</option>
-          <option value="lunate">ϲ (Lunate)</option>
+          <option value="standard">Σ σ/ς (Standard)</option>
+          <option value="lunate">Ϲ ϲ (Lunate)</option>
         </select>
       </label>
       <br><br>

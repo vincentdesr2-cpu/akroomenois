@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const interfaceHTML = `
     <div id="topBar">
       <button id="homeBtn"><img src="icon/arrow-left.svg" alt="Play" width="32" height="32"></button>
-      <div id="title">${document.title}(test 24)</div>
+      <div id="title">${document.title}(test 25)</div>
       <div id="moreMenuWrapper" style="display: flex; align-items: center; flex-direction: row;">
         <div id="extraActionsGroup" style="display: none; align-items: center; gap: 10px; margin-right: 10px;">
           <button id="freqBtn" title="Word Frequency" style="cursor: pointer; z-index: 10;"><img src="icon/insights.svg" alt="Settings" width="32" height="32"></button>
@@ -1023,7 +1023,7 @@ document.addEventListener("DOMContentLoaded", () => {
             .replace(/και/g, "ϗ")
             .replace(/ϰαι/g, "ϗ");
         } 
-        else if (style === "default" && (trueLength === 3 || trueLength === 1)) {
+        else if (style === "standard" && (trueLength === 3 || trueLength === 1)) {
           // Turning ligature completely OFF: return everything to full text 
           if (currentLiveKappaStyle === "cursive") {
             wordElement.textContent = currentText

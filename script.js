@@ -1085,6 +1085,7 @@ document.addEventListener("DOMContentLoaded", () => {
         
         if (style === "ligature") {
           wordElement.textContent = currentText
+            .replace(/ου/g, "ȣ")
             .replace(/οὗ/g, "ȣ\u0314\u0342")
             .replace(/οὖ/g, "ȣ\u0313\u0342")
             .replace(/οῦ/g, "ȣ\u0342")
@@ -1096,6 +1097,7 @@ document.addEventListener("DOMContentLoaded", () => {
             .replace(/ού/g, "ȣ\u0301")
             .replace(/οὑ/g, "ȣ\u0314")
             .replace(/οὐ/g, "ȣ\u0313")
+            .replace(/Ου/g, "Ȣ")
             .replace(/Οὗ/g, "Ȣ\u0314\u0342")
             .replace(/Οὖ/g, "Ȣ\u0313\u0342")
             .replace(/Οῦ/g, "Ȣ\u0342")

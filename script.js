@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const interfaceHTML = `
     <div id="topBar">
       <button id="homeBtn"><img src="icon/arrow-left.svg" alt="Play" width="32" height="32"></button>
-      <div id="title">${document.title}(test 21)</div>
+      <div id="title">${document.title}(test 22)</div>
       <div id="moreMenuWrapper" style="display: flex; align-items: center; flex-direction: row;">
         <div id="extraActionsGroup" style="display: none; align-items: center; gap: 10px; margin-right: 10px;">
           <button id="freqBtn" title="Word Frequency" style="cursor: pointer; z-index: 10;"><img src="icon/insights.svg" alt="Settings" width="32" height="32"></button>
@@ -985,32 +985,62 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   // ==========================================
   // ΚΑΙ GLYPH VARIANT SELECTION CONTROL
-  // ==========================================replace(/ϗ/g, "και").replace(/ϗ\u0301/g, "κα\u03af").replace(/ϗ\u0300/g, "κα\u1f76").replace(/Ϗ/g, "Και").replace(/Ϗ\u0301/g, "Κα\u03af").replace(/Ϗ\u0300/g, "Κα\u1f76");
+  // ==========================================
   if (kaiStyleControl) {
     const greekWordsList = document.querySelectorAll("#text span.word");
 
     const updateDocumentKaiStyle = (style) => {
-      // DYNAMIC CHECK: Look up exactly what the sigma select is currently set to right now
       const currentLiveKappaStyle = kappaStyleControl ? kappaStyleControl.value : "standard";
 
       greekWordsList.forEach(wordElement => {
         let currentText = wordElement.textContent;
-        let cleanText = currentText.trim();
 
+        // Strip combining diacritics to get visual character count
         const trueLength = [...currentText.replace(/[\u0300-\u0301]/g, "")].length;
 
         if (style === "ligature" && trueLength === 3) {
-          // Turn both standard and cursive combinations into the ligature ligatures
-          wordElement.textContent = currentText.replace(/και/g, "ϗ").replace(/κα\u03af|κα\u03b9\u0301/g, "ϗ\u0301").replace(/κα\u1f76|κα\u03b9\u0300/g, "ϗ\u0300").replace(/Και/g, "Ϗ").replace(/Κα\u03af|Κα\u03b9\u0301/g, "Ϗ\u0301").replace(/Κα\u1f76|Κα\u03b9\u0300/g, "Ϗ\u0300").replace(/ϰαι/g, "ϗ").replace(/ϰα\u03af|ϰα\u03b9\u0301/g, "ϗ\u0301").replace(/ϰα\u1f76|ϰα\u03b9\u0300/g, "ϗ\u0300");
+          wordElement.textContent = currentText
+            // 1. Accented Majuscules First
+            .replace(/Κα\u03af|Κα\u03b9\u0301/g, "Ϗ\u0301")
+            .replace(/Κα\u1f76|Κα\u03b9\u0300/g, "Ϗ\u0300")
+            // 2. Accented Minuscules Second (Both standard & cursive kappas)
+            .replace(/κα\u03af|κα\u03b9\u0301|ϰα\u03af|ϰα\u03b9\u0301/g, "ϗ\u0301")
+            .replace(/κα\u1f76|κα\u03b9\u0300|ϰα\u1f76|ϰα\u03b9\u0300/g, "ϗ\u0300")
+            // 3. Bare characters last
+            .replace(/Και/g, "Ϗ")
+            .replace(/και/g, "ϗ")
+            .replace(/ϰαι/g, "ϗ");
         }
         else if (style === "minuscule" && trueLength === 3) {
-          wordElement.textContent = currentText.replace(/Ϗ/g, "Και").replace(/Ϗ\u0301/g, "Κα\u03af").replace(/Ϗ\u0300/g, "Κα\u1f76").replace(/και/g, "ϗ").replace(/κα\u03af|κα\u03b9\u0301/g, "ϗ\u0301").replace(/κα\u1f76|κα\u03b9\u0300/g, "ϗ\u0300").replace(/ϰαι/g, "ϗ").replace(/ϰα\u03af|ϰα\u03b9\u0301/g, "ϗ\u0301").replace(/ϰα\u1f76|ϰα\u03b9\u0300/g, "ϗ\u0300");
-        } else {
-          // Turning ligature OFF: check what style of sigma we need to return to
+          wordElement.textContent = currentText
+            // 1. Turn accented uppercase ligatures into standard uppercase text first
+            .replace(/Ϗ\u0301/g, "Κα\u03af")
+            .replace(/Ϗ\u0300/g, "Κα\u1f76")
+            .replace(/Ϗ/g, "Και")
+            // 2. Ensure lowercase kais (even decomposed ones) settle securely into standard ϗ ligatures
+            .replace(/κα\u03af|κα\u03b9\u0301|ϰα\u03af|ϰα\u03b9\u0301/g, "ϗ\u0301")
+            .replace(/κα\u1f76|κα\u03b9\u0300|ϰα\u1f76|ϰα\u03b9\u0300/g, "ϗ\u0300")
+            .replace(/και/g, "ϗ")
+            .replace(/ϰαι/g, "ϗ");
+        } 
+        else {
+          // Turning ligature completely OFF: return everything to full text 
           if (currentLiveKappaStyle === "cursive") {
-            wordElement.textContent = currentText.replace(/ϗ/g, "ϰαι").replace(/ϗ\u0301/g, "ϰα\u03af").replace(/ϗ\u0300/g, "ϰα\u1f76").replace(/Ϗ/g, "Και").replace(/Ϗ\u0301/g, "Κα\u03af").replace(/Ϗ\u0300/g, "Κα\u1f76");
+            wordElement.textContent = currentText
+              .replace(/ϗ\u0301/g, "ϰα\u03af")
+              .replace(/ϗ\u0300/g, "ϰα\u1f76")
+              .replace(/ϗ/g, "ϰαι")
+              .replace(/Ϗ\u0301/g, "Κα\u03af")
+              .replace(/Ϗ\u0300/g, "Κα\u1f76")
+              .replace(/Ϗ/g, "Και");
           } else {
-            wordElement.textContent = currentText.replace(/ϗ/g, "και").replace(/ϗ\u0301/g, "κα\u03af").replace(/ϗ\u0300/g, "κα\u1f76").replace(/Ϗ/g, "Και").replace(/Ϗ\u0301/g, "Κα\u03af").replace(/Ϗ\u0300/g, "Κα\u1f76");
+            wordElement.textContent = currentText
+              .replace(/ϗ\u0301/g, "κα\u03af")
+              .replace(/ϗ\u0300/g, "κα\u1f76")
+              .replace(/ϗ/g, "και")
+              .replace(/Ϗ\u0301/g, "Κα\u03af")
+              .replace(/Ϗ\u0300/g, "Κα\u1f76")
+              .replace(/Ϗ/g, "Και");
           }
         }
       });

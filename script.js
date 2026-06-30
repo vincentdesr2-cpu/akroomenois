@@ -39,6 +39,8 @@ document.addEventListener("DOMContentLoaded", () => {
     <div id="advancedFontPopup">
       <button id="closeAdvancedFont">✕</button>
       <h3>Advanced Font Settings</h3>
+      <i>Only Anaktoria supports all glyph variations.</i>
+      <br><br>
       <label>Beta: 
          <select id="betaStyleControl">
            <option value="standard">Β β (Standard)</option>

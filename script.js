@@ -61,6 +61,13 @@ document.addEventListener("DOMContentLoaded", () => {
          </select>
       </label>
       <br><br>
+      <label>Ou: 
+         <select id="ouStyleControl">
+           <option value="standard">Ού ού (Standard)</option>
+           <option value="ligature">Ȣ\u03af ȣ\u0301 (Ligature)</option>
+         </select>
+      </label>
+      <br><br>
       <label>Pi: 
          <select id="piStyleControl">
            <option value="standard">Π π (Standard)</option>
@@ -174,6 +181,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const kappaStyleControl = document.getElementById("kappaStyleControl");
   const stigmaStyleControl = document.getElementById("stigmaStyleControl");
   const kaiStyleControl = document.getElementById("kaiStyleControl");
+  const ouStyleControl = document.getElementById("ouStyleControl");
 
   let wasPlaying = false;
   let currentActive = null;
